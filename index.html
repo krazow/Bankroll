@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1412">
+  <meta name="description" content="Personal poker session and bankroll tracker.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Bankroll</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/app.css">
+  <script>const APP_VERSION = '0.1.0';</script>
+</head>
+<body>
+  <div id="lock" hidden></div>
+  <header class="top">
+    <a href="#/" class="brand" aria-label="Bankroll home"><img src="icons/icon.svg" alt="" width="28" height="28"> Bankroll</a>
+    <a href="#/live" id="live-pill" class="live-pill" hidden aria-label="Running session"></a>
+  </header>
+  <main id="view" tabindex="-1"><p class="muted center pad">Loading…</p></main>
+  <nav class="tabs" aria-label="Main">
+    <a href="#/" data-tab="home"><span aria-hidden="true">⌂</span>Home</a>
+    <a href="#/sessions" data-tab="sessions"><span aria-hidden="true">☰</span>Sessions</a>
+    <a href="#/new?live=1" data-tab="new" class="fab" aria-label="Start a session"><span aria-hidden="true">＋</span></a>
+    <a href="#/stats" data-tab="stats"><span aria-hidden="true">▤</span>Stats</a>
+    <a href="#/more" data-tab="more"><span aria-hidden="true">⋯</span>More</a>
+  </nav>
+  <noscript><p class="pad">Bankroll needs JavaScript.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
