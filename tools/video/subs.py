@@ -71,7 +71,7 @@ WrapStyle: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,Inter SemiBold,48,&H00FFFFFF,&H00FFFFFF,&H00000000,&H28000000,0,0,0,0,100,100,0,0,3,18,0,2,110,110,150,1
+Style: Sub,Inter SemiBold,40,&H00FFFFFF,&H00FFFFFF,&H00000000,&H28000000,0,0,0,0,100,100,0,0,3,12,0,7,84,200,452,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -81,7 +81,7 @@ open('/tmp/vid/subs.ass', 'w').write(ass)
 print(len(cues), 'cues, total', round(total, 1), 's')
 
 src = '/tmp/vid/bankroll-tutorial-4k.mp4'
-tmp, out = '/tmp/vid/bankroll-tutorial-4k-subtitled.tmp.mp4', '/tmp/vid/bankroll-tutorial-4k-subtitled.mp4'
+tmp, out = '/tmp/vid/bankroll-tutorial-shorts-4k.tmp.mp4', '/tmp/vid/bankroll-tutorial-shorts-4k.mp4'
 subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', src, '-i', '/tmp/vid/bankroll-tutorial.srt',
   '-vf', 'ass=/tmp/vid/subs.ass:fontsdir=/usr/share/fonts/opentype/inter',
   '-map', '0:v', '-map', '0:a', '-map', '1:s', '-c:v', 'libx264', '-crf', '14', '-preset', 'slow', '-profile:v', 'high', '-level:v', '5.2',
