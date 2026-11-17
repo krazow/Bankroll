@@ -4,7 +4,8 @@ const VERSION = CACHE_PREFIX + '0.1.0';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'icons/icon.svg',
-  'js/app.js', 'js/db.js', 'js/ui.js', 'js/model.js', 'js/store.js', 'js/hooks.js',
+  'js/app.js', 'js/db.js', 'js/ui.js', 'js/model.js', 'js/store.js', 'js/hooks.js', 'js/stats.js', 'js/chart.js', 'js/review.js',
+  'js/views/stats.js',
   'js/views/home.js', 'js/views/live.js', 'js/views/sessions.js', 'js/views/session-form.js', 'js/views/bankroll.js',
   'js/views/more.js', 'js/views/settings.js',
 ];

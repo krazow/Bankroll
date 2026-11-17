@@ -23,14 +23,14 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 
 ## Phase 2 · Analytics
 
-- [ ] Dashboard: total profit, hourly rate, sessions, hours, win rate, biggest win/loss
-- [ ] Cumulative profit graph
-- [ ] Filters and breakdowns by game, stakes, venue, day of week, time of day, session length
-- [ ] BB/hour, $/hour; ROI, ITM %, average finish
-- [ ] Calendar heatmap
-- [ ] Monthly goals with progress bars
-- [ ] Bankroll rules: buy-ins per stake, stop-loss / stop-win alerts
-- [ ] Post-session review: mood, tilt, focus, sleep, alcohol, key hands
+- [x] Dashboard: total profit, hourly rate, sessions, hours, win rate, biggest win/loss
+- [x] Cumulative profit graph
+- [x] Filters and breakdowns by game, stakes, venue, day of week, time of day, session length
+- [x] BB/hour, $/hour; ROI, ITM %, average finish
+- [x] Calendar heatmap
+- [x] Monthly goals with progress bars
+- [x] Bankroll rules: buy-ins per stake, stop-loss / stop-win alerts
+- [x] Post-session review: mood, tilt, focus, sleep, alcohol, key hands
 
 ## Phase 3 · Tools
 

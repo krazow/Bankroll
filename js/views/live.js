@@ -3,7 +3,7 @@ import * as db from '../db.js';
 import * as M from '../model.js';
 import { h, mount, money, duration, signClass, askNumber, sheet, toast, go, num, confirmBox, timeLabel, select, field } from '../ui.js';
 import { runningSession, lastFinished, startRepeat } from '../store.js';
-import { afterFinish } from '../hooks.js';
+import { afterFinish, liveAlert, getRules } from '../hooks.js';
 
 export async function render(root) {
   let s = await runningSession();
@@ -19,7 +19,9 @@ export async function render(root) {
     return;
   }
 
+  const rules = await getRules();
   const save = async next => { s = await db.put('sessions', next); paint(); };
+  const alertBox = h('div');
   const clock = h('div.clock#clock', { 'aria-live': 'off' });
   const statusTag = h('span.tag');
   const amounts = h('div');
@@ -101,6 +103,7 @@ export async function render(root) {
       ...(s.stacks || []).map(x => ({ at: x.at, text: `Stack ${money(x.amount)}` })),
       ...(s.breaks || []).map(b => ({ at: b.start, text: b.end ? `Break ${duration(b.end - b.start)}` : 'On break' })),
     ].sort((a, b) => b.at - a.at);
+    mount(alertBox, liveAlert(s, rules));
     mount(events, ev.map(e => h('li.item', h('span.grow', e.text), h('span.muted', timeLabel(e.at)))));
   }
 
@@ -109,6 +112,7 @@ export async function render(root) {
       h('div.row.between', h('h1', M.sessionTitle(s)), statusTag),
       h('p.muted', [s.setting === 'online' ? 'Online' : 'Live', s.venue].filter(Boolean).join(' · ')),
       clock),
+    alertBox,
     amounts,
     h('div.card', buttons, h('div', { style: { height: '10px' } }), endBtn),
     h('div.card', h('h3', 'Timeline'), events),

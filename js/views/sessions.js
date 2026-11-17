@@ -5,8 +5,8 @@ import { h, mount, money, duration, signClass, dateLabel, timeLabel, confirmBox,
 import { getBankrolls } from '../store.js';
 import { sessionExtras } from '../hooks.js';
 
-export async function render(root, params) {
-  if (params[0]) return renderOne(root, params[0]);
+export async function render(root, params, query) {
+  if (params[0]) return renderOne(root, params[0], query || {});
   const sessions = (await db.all('sessions')).sort((a, b) => b.start - a.start);
   if (!sessions.length) {
     mount(root, h('div.card.center', h('h1', 'No sessions yet'), h('p.muted', 'Start a session or log one you already played.'),
@@ -42,7 +42,7 @@ export function item(s) {
     h('div.amt', { class: running ? '' : signClass(M.net(s)) }, running ? '…' : money(M.net(s), { sign: true }))));
 }
 
-async function renderOne(root, id) {
+async function renderOne(root, id, query) {
   const s = await db.get('sessions', id);
   if (!s) { mount(root, h('div.card', h('p', 'Session not found.'), h('a', { href: '#/sessions' }, 'All sessions'))); return; }
   if (M.isRunning(s)) { go('#/live'); return; }
@@ -83,7 +83,7 @@ async function renderOne(root, id) {
         (s.expenses || []).map(e => row(e.kind, '-' + money(e.amount))),
         banks.length > 1 && bank ? row('Bankroll', bank.name) : null),
       s.notes && h('div', h('h3', { style: { marginTop: '12px' } }, 'Notes'), h('p', { style: { whiteSpace: 'pre-wrap' } }, s.notes))),
-    await sessionExtras(s),
+    await sessionExtras(s, query),
     h('div.btn-grid',
       h('a.btn#edit-session', { href: `#/new?edit=${s.id}` }, 'Edit'),
       h('button.btn.danger#delete-session', { onclick: async () => {
