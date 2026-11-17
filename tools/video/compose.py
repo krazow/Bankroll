@@ -30,9 +30,10 @@ def wrap(draw, text, fnt, width):
         lines.append(cur)
     return lines
 
-def centered(draw, y, text, fnt, fill, width=W - 160 * S, gap=1.25):
+CX = 500 * S  # visual centre of the Shorts safe area (it sits left of the frame centre)
+def centered(draw, y, text, fnt, fill, width=720 * S, gap=1.25):
     for line in wrap(draw, text, fnt, width):
-        draw.text(((W - draw.textlength(line, font=fnt)) / 2, y), line, font=fnt, fill=fill)
+        draw.text((CX - draw.textlength(line, font=fnt) / 2, y), line, font=fnt, fill=fill)
         y += int(fnt.size * gap)
     return y
 
@@ -56,9 +57,9 @@ for idx, it in enumerate(m):
     im = background(); d = ImageDraw.Draw(im)
     kind = it.get('kind', 'shot')
     if kind == 'title':
-        c = chip(300 * S); im.paste(c, ((W - 300 * S) // 2, 520 * S), c)
-        d.text(((W - d.textlength(it['title'], font=font('InterDisplay-ExtraBold.otf', 132))) / 2, 880 * S), it['title'], font=font('InterDisplay-ExtraBold.otf', 132), fill=TEXT)
-        y = 1070 * S
+        c = chip(240 * S); im.paste(c, (CX - 120 * S, 660 * S), c)
+        d.text((CX - d.textlength(it['title'], font=font('InterDisplay-ExtraBold.otf', 120)) / 2, 920 * S), it['title'], font=font('InterDisplay-ExtraBold.otf', 120), fill=TEXT)
+        y = 1090 * S
         for k, line in enumerate(it['sub'].split('\n')):
             fnt = font('Inter-Medium.otf', 50) if k == 0 or idx == 0 else font('Inter-SemiBold.otf', 50)
             col = MUTED if (idx == 0 or k == 0) else ACCENT
@@ -67,26 +68,24 @@ for idx, it in enumerate(m):
         n = SECTIONS.index(it['section']) + 1 if it['section'] in SECTIONS else 0
         label = f'{n} / {len(SECTIONS)}  ·  {it["section"].upper()}'
         lf = font('Inter-SemiBold.otf', 36)
-        d.text(((W - d.textlength(label, font=lf)) / 2, 700 * S), label, font=lf, fill=ACCENT)
-        y = centered(d, 790 * S, it['title'], font('InterDisplay-ExtraBold.otf', 96), TEXT, gap=1.12)
+        d.text((CX - d.textlength(label, font=lf) / 2, 680 * S), label, font=lf, fill=ACCENT)
+        y = centered(d, 770 * S, it['title'], font('InterDisplay-ExtraBold.otf', 96), TEXT, gap=1.12)
         centered(d, y + 40 * S, it['sub'], font('Inter-Medium.otf', 46), MUTED)
         progress(d, it['section'])
     else:
         # caption band
         lf = font('Inter-SemiBold.otf', 30)
-        d.text((80 * S, 96 * S), it['section'].upper(), font=lf, fill=ACCENT)
-        tf = font('InterDisplay-Bold.otf', 66)
-        y = 146 * S
-        for line in wrap(d, it['title'], tf, W - 160 * S): d.text((80 * S, y), line, font=tf, fill=TEXT); y += 78 * S
-        sf = font('Inter-Regular.otf', 38)
-        for line in wrap(d, it['sub'], sf, W - 160 * S): d.text((80 * S, y + 6 * S), line, font=sf, fill=MUTED); y += 50 * S
+        d.text((72 * S, 236 * S), it['section'].upper(), font=lf, fill=ACCENT)
+        tf = font('InterDisplay-Bold.otf', 60)
+        y = 280 * S
+        for line in wrap(d, it['title'], tf, 808 * S): d.text((72 * S, y), line, font=tf, fill=TEXT); y += 70 * S
         # phone
         shot = Image.open(it['file']).convert('RGB')
-        top = max(y + 46 * S, 430 * S)
-        ph = 1830 * S - top
+        top = 640 * S  # 440-620 is kept free for the subtitles
+        ph = 1845 * S - top
         pw = round(shot.width * ph / shot.height)
         shot = shot.resize((pw, ph), Image.LANCZOS)
-        x = (W - pw) // 2
+        x = CX - pw // 2
         r, b = 54 * S, 14 * S
         shadow = Image.new('L', (W, H), 0)
         ImageDraw.Draw(shadow).rounded_rectangle([x - b, top - b + 18 * S, x + pw + b, top + ph + b + 18 * S], r + b, fill=170)
