@@ -30,6 +30,10 @@ test('every file the service worker caches exists', () => {
   const list = JSON.parse(sw.match(/const SHELL = (\[[\s\S]*?\]);/)[1].replace(/'/g, '"').replace(/,\s*\]/, ']'));
   const missing = list.filter(f => f !== './' && !fs.existsSync(f));
   assert.deepEqual(missing, [], 'missing: ' + missing.join(', '));
+  // and every app file is cached, so every screen works offline
+  const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(d + '/' + e.name) : [d + '/' + e.name]);
+  const notCached = walk('js').filter(f => !list.includes(f));
+  assert.deepEqual(notCached, [], 'not in the service worker list: ' + notCached.join(', '));
 });
 
 test('service worker installs and the app opens offline', async () => {

@@ -11,15 +11,15 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 
 ## Phase 1 · Core tracking
 
-- [ ] Live session timer: start, pause for breaks, end; survives closing the app
-- [ ] Mid-session rebuys, add-ons and stack updates
-- [ ] Quick "log past session" form
-- [ ] Session fields: game, stakes, cash/tourney, live/online, venue, notes (extendable pick-lists)
-- [ ] Tournament fields: buy-in + fee, entrants, finish place, prize, bounties
-- [ ] Expenses per session: tips, food, travel, rake
-- [ ] "Repeat last session" one-tap start
-- [ ] Bankroll ledger: deposits, withdrawals, balance over time
-- [ ] Multiple bankrolls
+- [x] Live session timer: start, pause for breaks, end; survives closing the app
+- [x] Mid-session rebuys, add-ons and stack updates
+- [x] Quick "log past session" form
+- [x] Session fields: game, stakes, cash/tourney, live/online, venue, notes (extendable pick-lists)
+- [x] Tournament fields: buy-in + fee, entrants, finish place, prize, bounties
+- [x] Expenses per session: tips, food, travel, rake
+- [x] "Repeat last session" one-tap start
+- [x] Bankroll ledger: deposits, withdrawals, balance over time
+- [x] Multiple bankrolls
 
 ## Phase 2 · Analytics
 

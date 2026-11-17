@@ -1,6 +1,8 @@
 // Bankroll app shell: hash router, bottom tabs, startup.
 import * as db from './db.js';
-import { h, mount } from './ui.js';
+import { h, mount, setCurrency, duration } from './ui.js';
+import * as M from './model.js';
+import { getBankrolls, runningSession } from './store.js';
 
 // route pattern -> [view module, tab]
 const ROUTES = [
@@ -12,7 +14,7 @@ const ROUTES = [
   [/^bankroll$/, 'bankroll', 'more'],
   [/^stats$/, 'stats', 'stats'],
   [/^tools(?:\/([\w-]+))?$/, 'tools', 'more'],
-  [/^more$/, 'settings', 'more'],
+  [/^more$/, 'more', 'more'],
   [/^settings(?:\/([\w-]+))?$/, 'settings', 'more'],
 ];
 
@@ -47,9 +49,26 @@ async function route() {
   window.scrollTo(0, 0);
 }
 
+// The little "LIVE 1:23:45" pill in the header while a session runs.
+const pill = document.getElementById('live-pill');
+let running = null;
+async function refreshRunning() { running = await runningSession(); paintPill(); }
+function paintPill() {
+  pill.hidden = !running || location.hash.startsWith('#/live');
+  if (!running) return;
+  pill.textContent = (M.onBreak(running) ? '❚❚ ' : '● ') + duration(M.playedMs(running), { seconds: true });
+  pill.classList.toggle('paused', M.onBreak(running));
+}
+
 async function start() {
   await db.open();
   db.persist();
+  setCurrency(await db.getSetting('currency', '$'));
+  await getBankrolls();
+  await refreshRunning();
+  db.onChange(store => { if (store === 'sessions') refreshRunning(); });
+  setInterval(paintPill, 1000);
+  window.addEventListener('hashchange', paintPill);
   window.addEventListener('hashchange', route);
   await route();
   if ('serviceWorker' in navigator) {
