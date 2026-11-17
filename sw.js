@@ -1,6 +1,6 @@
 // Bankroll service worker. Bump nothing by hand: the release kit stamps the version in.
 const CACHE_PREFIX = 'bankroll-';
-const VERSION = CACHE_PREFIX + '0.1.0';
+const VERSION = CACHE_PREFIX + '0.1.1';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'icons/icon.svg',
