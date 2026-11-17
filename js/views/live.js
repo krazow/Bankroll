@@ -117,6 +117,7 @@ export async function render(root) {
     h('div.card', buttons, h('div', { style: { height: '10px' } }), endBtn),
     h('div.card', h('h3', 'Timeline'), events),
     h('div.row', h('a.btn.ghost.sm', { href: `#/new?edit=${s.id}` }, 'Edit details'),
+      h('a.btn.ghost.sm#live-hand', { href: `#/tools/hands?new=1&session=${s.id}` }, '+ Hand note'),
       h('button.btn.ghost.sm.danger#btn-discard', { onclick: async () => {
         if (await confirmBox('Delete this running session? Nothing will be saved.', { ok: 'Delete', danger: true })) {
           await db.remove('sessions', s.id); go('#/');

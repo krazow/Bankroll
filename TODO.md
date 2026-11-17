@@ -34,10 +34,10 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 
 ## Phase 3 · Tools
 
-- [ ] Hand notes per session
-- [ ] Opponent notes
-- [ ] Odds / equity calculator
-- [ ] Home-game tools: blind timer, payout calculator, settle-up
+- [x] Hand notes per session
+- [x] Opponent notes
+- [x] Odds / equity calculator
+- [x] Home-game tools: blind timer, payout calculator, settle-up
 
 ## Phase 4 · Data & polish
 

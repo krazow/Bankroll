@@ -112,6 +112,14 @@ export async function settingsSections() {
 
 // Extra cards shown on a finished session's page.
 export async function sessionExtras(session, query = {}) {
-  return [reviewCard(session, { open: query.review === '1' })];
+  const { handItem } = await import('./tools/hands.js');
+  const hands = (await db.byIndex('hands', 'sessionId', session.id)).sort((a, b) => a.date - b.date);
+  return [
+    reviewCard(session, { open: query.review === '1' }),
+    h('div.card#session-hands',
+      h('div.row.between', h('h3', `Hands${hands.length ? ` (${hands.length})` : ''}`),
+        h('a.btn.ghost.sm#add-hand', { href: `#/tools/hands?new=1&session=${session.id}&from=session` }, '+ Add hand')),
+      hands.length ? h('ul.list', hands.map(x => handItem(x, null))) : h('p.muted.small', 'No hands noted for this session.')),
+  ];
 }
 

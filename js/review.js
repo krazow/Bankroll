@@ -34,7 +34,7 @@ export function reviewCard(session, { open = false } = {}) {
     scale('tilt', 'Tilt', r.tilt, 'calm', 'steaming'),
     scale('focus', 'Focus', r.focus, 'distracted', 'locked in'),
     h('div.grid2',
-      h('label.field', h('span', 'Sleep last night (hours)'), h('input', { name: 'sleep', type: 'number', inputmode: 'decimal', step: '0.5', min: '0', max: '24', value: r.sleep ?? '' })),
+      h('label.field', h('span', 'Sleep last night (hours)'), h('input', { name: 'sleep', type: 'number', inputmode: 'decimal', step: 'any', min: '0', max: '24', value: r.sleep ?? '' })),
       h('label.field', h('span', 'Drinks'), h('input', { name: 'alcohol', type: 'number', inputmode: 'numeric', min: '0', value: r.alcohol ?? '' }))),
     h('label.field', h('span', 'Key hands'), h('textarea', { name: 'keyHands', placeholder: 'Big pots, tough spots…' }, r.keyHands || '')),
     h('label.field', h('span', 'Lesson / what to work on'), h('textarea', { name: 'lesson' }, r.lesson || '')),
