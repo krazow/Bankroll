@@ -17,6 +17,8 @@ add it to your home screen, and it works offline. All data stays on your device 
 - **Data**: CSV export (handy for taxes), CSV import from other trackers, full JSON backup/restore,
   optional backup to a private GitHub Gist, share-card images, PIN lock, dark/light theme and large buttons.
 
+Tutorial video: [watch on YouTube](https://youtube.com/shorts/_pYxyl0TdmM) (2:24, features and security).
+
 Plan and progress: [TODO.md](TODO.md). Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop

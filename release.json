@@ -4,14 +4,31 @@
   "description": "Personal poker session and bankroll tracker.",
   "site": ".",
   "app": ".",
-  "exclude": [],
+  "exclude": [
+    "media"
+  ],
   "sw": "sw.js",
   "version": [
-    { "file": "index.html", "pattern": "const APP_VERSION = '([^']*)'" }
+    {
+      "file": "index.html",
+      "pattern": "const APP_VERSION = '([^']*)'"
+    }
   ],
-  "android": { "enabled": true, "appId": "com.krazow.bankroll" },
-  "windows": { "enabled": true, "port": 47870 },
-  "ios": { "enabled": false },
-  "macos": { "enabled": false },
-  "extras": { "enabled": false }
+  "android": {
+    "enabled": true,
+    "appId": "com.krazow.bankroll"
+  },
+  "windows": {
+    "enabled": true,
+    "port": 47870
+  },
+  "ios": {
+    "enabled": false
+  },
+  "macos": {
+    "enabled": false
+  },
+  "extras": {
+    "enabled": false
+  }
 }

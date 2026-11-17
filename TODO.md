@@ -49,6 +49,10 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 - [x] Share card image
 - [x] PIN lock
 
+## Extras
+
+- [x] Tutorial video (features and security), subtitles and YouTube thumbnail: [on YouTube](https://youtube.com/shorts/_pYxyl0TdmM)
+
 ## Later ideas
 
 - [ ] Google Drive backup (needs a Google Cloud OAuth client)
