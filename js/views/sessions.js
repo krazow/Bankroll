@@ -85,6 +85,17 @@ async function renderOne(root, id, query) {
       s.notes && h('div', h('h3', { style: { marginTop: '12px' } }, 'Notes'), h('p', { style: { whiteSpace: 'pre-wrap' } }, s.notes))),
     await sessionExtras(s, query),
     h('div.btn-grid',
+      h('button.btn.primary#share-session', { style: { gridColumn: '1 / -1' }, onclick: async () => {
+        const { shareCard } = await import('../sharecard.js');
+        const r = await shareCard({
+          title: M.sessionTitle(s), subtitle: [dateLabel(s.start, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }), s.venue].filter(Boolean).join(' · '),
+          big: money(net, { sign: true }), positive: net > 0 ? true : net < 0 ? false : null,
+          lines: [['Time', duration(M.playedMs(s))], ['Per hour', hrs > 0 ? money(Math.round(net / hrs), { sign: true }) : '—'],
+            s.type === 'tourney' ? ['Finished', s.tourney?.place ? `${s.tourney.place}${s.tourney.entrants ? ' of ' + s.tourney.entrants : ''}` : '—'] : ['Buy-in', money(M.totalBuyIn(s))]],
+          footer: 'Tracked with Bankroll',
+        }, `bankroll-${new Date(s.start).toISOString().slice(0, 10)}.png`);
+        if (r === 'downloaded') toast('Image saved');
+      } }, 'Share result'),
       h('a.btn#edit-session', { href: `#/new?edit=${s.id}` }, 'Edit'),
       h('button.btn.danger#delete-session', { onclick: async () => {
         if (await confirmBox('Delete this session for good?', { ok: 'Delete', danger: true })) {

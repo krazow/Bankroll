@@ -8,7 +8,8 @@ const SHELL = [
   'js/views/stats.js', 'js/views/tools.js', 'js/cards.js', 'js/equity.js', 'js/homegame.js',
   'js/tools/hands.js', 'js/tools/opponents.js', 'js/tools/equity.js', 'js/tools/timer.js', 'js/tools/payouts.js', 'js/tools/settle.js',
   'js/views/home.js', 'js/views/live.js', 'js/views/sessions.js', 'js/views/session-form.js', 'js/views/bankroll.js',
-  'js/views/more.js', 'js/views/settings.js',
+  'js/views/more.js', 'js/views/settings.js', 'js/views/import.js',
+  'js/csv.js', 'js/backup.js', 'js/lock.js', 'js/sharecard.js', 'js/notify.js', 'js/appearance.js',
 ];
 
 self.addEventListener('install', e => e.waitUntil(

@@ -54,3 +54,13 @@ export function noErrors(page) {
   const errs = page.errors.filter(e => !/favicon|service worker/i.test(e));
   if (errs.length) throw new Error('page errors: ' + errs.join(' | '));
 }
+
+// Polls an async check inside the page until it returns true (page.waitForFunction doesn't await promises).
+export async function until(page, fn, arg, { timeout = 5000 } = {}) {
+  const end = Date.now() + timeout;
+  while (Date.now() < end) {
+    if (await page.evaluate(fn, arg)) return;
+    await page.waitForTimeout(100);
+  }
+  throw new Error('timed out waiting for: ' + fn.toString().slice(0, 120));
+}

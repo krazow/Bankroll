@@ -1,7 +1,7 @@
 // Stats: filters, summary, profit graph, breakdowns, calendar, tournaments and mindset.
 import * as S from '../stats.js';
 import { lineChart, barChart } from '../chart.js';
-import { h, mount, money, signClass, dateLabel, select } from '../ui.js';
+import { h, mount, money, signClass, dateLabel, select, toast } from '../ui.js';
 import { getBankrolls, sessionsWithBankroll } from '../store.js';
 
 // Filters persist while the app is open.
@@ -34,7 +34,15 @@ export async function render(root) {
 
     mount(root,
       h('div.row.between', { style: { marginBottom: '8px' } }, h('h1', 'Stats'),
-        h('button.btn.ghost.sm#reset-filters', { onclick: () => { Object.assign(state, { period: 'all', type: '', setting: '', game: '', stakes: '', venue: '', bankrollId: '', dow: '', tod: '', length: '' }); draw(); } }, 'Reset')),
+        h('div.row', sm.count ? h('button.btn.sm#share-stats', { onclick: async () => {
+          const { shareCard } = await import('../sharecard.js');
+          const names = { all: 'All time', year: 'This year', '90d': 'Last 90 days', '30d': 'Last 30 days', month: new Date().toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) };
+          const r = await shareCard({ title: names[state.period], subtitle: [state.game, state.stakes, state.venue, state.type === 'tourney' ? 'Tournaments' : state.type === 'cash' ? 'Cash games' : ''].filter(Boolean).join(' · ') || 'All games',
+            big: money(sm.net, { sign: true }), positive: sm.net > 0 ? true : sm.net < 0 ? false : null,
+            lines: [['Sessions', sm.count], ['Hours', sm.hours.toFixed(1)], ['Per hour', hourly(sm.hourly)], ['Win rate', (sm.winRate ?? 0) + '%']], footer: 'Tracked with Bankroll' }, 'bankroll-stats.png');
+          if (r === 'downloaded') toast('Image saved');
+        } }, 'Share') : null,
+        h('button.btn.ghost.sm#reset-filters', { onclick: () => { Object.assign(state, { period: 'all', type: '', setting: '', game: '', stakes: '', venue: '', bankrollId: '', dow: '', tod: '', length: '' }); draw(); } }, 'Reset'))),
       h('div.seg#period', [['all', 'All'], ['year', 'Year'], ['90d', '90d'], ['30d', '30d'], ['month', 'Month']].map(([v, l]) =>
         h('label', h('input', { type: 'radio', name: 'period', value: v, checked: state.period === v, onchange: () => set('period', v) }), h('span', l)))),
       h('div.card',

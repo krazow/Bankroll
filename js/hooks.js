@@ -11,6 +11,7 @@ export async function getRules() { return { ...S.DEFAULT_RULES, ...(await db.get
 
 // What happens right after a session ends: open it with the review form.
 export async function afterFinish(session) {
+  import('./backup.js').then(b => b.autoBackup());
   go(`#/session/${session.id}?review=1`);
 }
 
@@ -35,7 +36,7 @@ export async function dashboardCards(sessions) {
       tile('This month', money(month.net, { sign: true }), month.net, 'd-month'),
       tile('Win rate', all.winRate + '%', 0, 'd-winrate'),
       tile('Sessions', String(all.count), 0, 'd-count'),
-      tile('Hours', all.hours.toFixed(0), 0, 'd-hours'),
+      tile('Hours', all.hours.toFixed(1), 0, 'd-hours'),
       tile('Biggest win', money(all.biggestWin, { sign: true }), all.biggestWin, 'd-bigwin'),
       tile('Biggest loss', money(all.biggestLoss), all.biggestLoss, 'd-bigloss')),
     (gp.profit || gp.hours || gp.sessions)

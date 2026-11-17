@@ -41,10 +41,16 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 
 ## Phase 4 · Data & polish
 
-- [ ] CSV export + JSON backup / restore
-- [ ] CSV import from other trackers / spreadsheets
-- [ ] Optional backup to a private GitHub Gist
-- [ ] Big-button, one-hand, dark-mode UI
-- [ ] Running-session notification + home-screen shortcuts
-- [ ] Share card image
-- [ ] PIN lock
+- [x] CSV export + JSON backup / restore
+- [x] CSV import from other trackers / spreadsheets
+- [x] Optional backup to a private GitHub Gist (Google Drive was swapped for this: no sign-in setup needed)
+- [x] Big-button, one-hand, dark-mode UI
+- [x] Running-session notification + home-screen shortcuts
+- [x] Share card image
+- [x] PIN lock
+
+## Later ideas
+
+- [ ] Google Drive backup (needs a Google Cloud OAuth client)
+- [ ] Full hand replayer
+- [ ] Staking / backer tracking

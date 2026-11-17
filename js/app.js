@@ -3,6 +3,9 @@ import * as db from './db.js';
 import { h, mount, setCurrency, duration } from './ui.js';
 import * as M from './model.js';
 import { getBankrolls, runningSession } from './store.js';
+import { applyAppearance } from './appearance.js';
+import { initLock } from './lock.js';
+import * as notify from './notify.js';
 
 // route pattern -> [view module, tab]
 const ROUTES = [
@@ -52,7 +55,7 @@ async function route() {
 // The little "LIVE 1:23:45" pill in the header while a session runs.
 const pill = document.getElementById('live-pill');
 let running = null;
-async function refreshRunning() { running = await runningSession(); paintPill(); }
+async function refreshRunning() { running = await runningSession(); paintPill(); notify.update(running); }
 function paintPill() {
   pill.hidden = !running || location.hash.startsWith('#/live');
   if (!running) return;
@@ -63,6 +66,9 @@ function paintPill() {
 async function start() {
   await db.open();
   db.persist();
+  await applyAppearance();
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListener?.('change', applyAppearance);
+  await initLock();
   setCurrency(await db.getSetting('currency', '$'));
   await getBankrolls();
   await refreshRunning();
@@ -72,7 +78,7 @@ async function start() {
   window.addEventListener('hashchange', route);
   await route();
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(e => console.warn('service worker', e));
+    navigator.serviceWorker.register('sw.js').then(() => notify.update(running)).catch(e => console.warn('service worker', e));
   }
   document.documentElement.dataset.ready = '1';
 }
