@@ -3,6 +3,7 @@ import { h, mount } from '../ui.js';
 
 export const MENU = [
   ['#/bankroll', 'Bankroll', 'Balances, deposits and withdrawals'],
+  ['#/staking', 'Staking', 'Backers, action sold, makeup and who owes whom'],
   ['#/tools', 'Tools', 'Hand notes, opponents, odds, home-game tools'],
   ['#/settings', 'Settings', 'Currency, goals, rules, backup and privacy'],
 ];

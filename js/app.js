@@ -15,6 +15,7 @@ const ROUTES = [
   [/^session\/([\w-]+)$/, 'sessions', 'sessions'],
   [/^new$/, 'session-form', 'new'],
   [/^bankroll$/, 'bankroll', 'more'],
+  [/^staking(?:\/([\w-]+))?$/, 'staking', 'more'],
   [/^stats$/, 'stats', 'stats'],
   [/^tools(?:\/([\w-]+))?$/, 'tools', 'more'],
   [/^more$/, 'more', 'more'],

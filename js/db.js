@@ -2,7 +2,7 @@
 // (In the beta build the release kit renames the database to "beta-bankroll", so test data never mixes with real data.)
 
 export const DB_NAME = 'bankroll';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;   // 2: staking (backers, deals, stakemoney)
 export const STORES = {
   sessions: { keyPath: 'id', indexes: [['start', 'start'], ['bankrollId', 'bankrollId']] },
   bankrolls: { keyPath: 'id', indexes: [] },
@@ -10,6 +10,9 @@ export const STORES = {
   hands: { keyPath: 'id', indexes: [['sessionId', 'sessionId']] },
   opponents: { keyPath: 'id', indexes: [] },
   kv: { keyPath: 'key', indexes: [] },
+  backers: { keyPath: 'id', indexes: [] },
+  deals: { keyPath: 'id', indexes: [['backerId', 'backerId']] },
+  stakemoney: { keyPath: 'id', indexes: [['backerId', 'backerId']] },
 };
 
 let dbPromise = null;

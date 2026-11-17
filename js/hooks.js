@@ -16,14 +16,15 @@ export async function afterFinish(session) {
 }
 
 // Stats cards on the home screen.
-export async function dashboardCards(sessions) {
+export async function dashboardCards(sessions, mi = null) {
   const done = S.finished(sessions);
   if (!done.length) return null;
   const [goals, rules, banks, txs] = await Promise.all([getGoals(), getRules(), getBankrolls(), db.all('transactions')]);
+  const opts = mi ? mi.opts : {};
   const all = S.summary(done);
   const month = S.summary(S.applyFilter(done, S.period('month')));
   const gp = S.goalProgress(done, goals);
-  const alerts = await bankrollAlerts(sessions, rules, banks, txs);
+  const alerts = await bankrollAlerts(sessions, rules, banks, txs, opts);
   const tile = (k, v, n, id) => h('div.tile', h('div.k', k), h('div.v', { id, class: signClass(n) }, v));
   const bar = (label, g, fmt) => g && h('div', { style: { marginBottom: '10px' } },
     h('div.row.between.small', h('span', label), h('span.muted', `${fmt(g.value)} / ${fmt(g.target)}`)),
@@ -48,12 +49,12 @@ export async function dashboardCards(sessions) {
 }
 
 // Warnings when a bankroll is too small for the stakes you play.
-export async function bankrollAlerts(sessions, rules, banks, txs) {
+export async function bankrollAlerts(sessions, rules, banks, txs, opts = {}) {
   const out = [];
   for (const b of banks.filter(x => !x.archived)) {
     const mine = sessions.filter(s => s.bankrollId === b.id && s.status === 'done');
     if (!mine.length) continue;
-    const bal = M.bankrollBalance(b.id, txs, sessions);
+    const bal = M.bankrollBalance(b.id, txs, sessions, opts);
     const recentStakes = [...new Set([...mine].sort((a, c) => c.start - a.start).filter(s => s.type === 'cash' && s.stakes).slice(0, 5).map(s => s.stakes))];
     for (const r of S.buyInsAt(bal, recentStakes, rules)) {
       if (!r.ok) out.push(h('li.bankroll-alert', `${banks.length > 1 ? b.name + ': ' : ''}${r.buyIns} buy-ins for ${r.stakes} (${money(r.buyIn)} each)`));
@@ -115,7 +116,9 @@ export async function settingsSections() {
 export async function sessionExtras(session, query = {}) {
   const { handItem } = await import('./tools/hands.js');
   const hands = (await db.byIndex('hands', 'sessionId', session.id)).sort((a, b) => a.date - b.date);
+  const { backingCard } = await import('./backing.js');
   return [
+    await backingCard(session, () => go(`#/session/${session.id}?t=${Date.now()}`)),
     reviewCard(session, { open: query.review === '1' }),
     h('div.card#session-hands',
       h('div.row.between', h('h3', `Hands${hands.length ? ` (${hands.length})` : ''}`),

@@ -1,5 +1,6 @@
 // CSV export and import. Pure functions (no DOM, no storage).
 import * as M from './model.js';
+import { playerNet } from './staking.js';
 
 // ---------- writing
 const cell = v => {
@@ -39,6 +40,7 @@ export function sessionColumns(bankrollName = () => '') {
     { label: 'Expenses', get: s => r2(M.expensesTotal(s)) },
     { label: 'Result before expenses', get: s => M.gross(s) },
     { label: 'Net result', get: s => M.net(s) },
+    { label: 'Your share of result', get: s => playerNet(s) },
     { label: 'Notes', get: s => s.notes },
   ];
 }
@@ -52,6 +54,24 @@ export function transactionsCSV(txs, bankrollName = () => '') {
   return toCSV([...txs].sort((a, b) => a.date - b.date), [
     { label: 'Date', get: t => iso(t.date) }, { label: 'Bankroll', get: t => bankrollName(t.bankrollId) },
     { label: 'Type', get: t => (t.kind === 'withdrawal' ? 'Withdrawal' : 'Deposit') }, { label: 'Amount', get: t => t.amount }, { label: 'Note', get: t => t.note },
+  ]);
+}
+
+// One backer's statement: + means you owe them more.
+export function statementCSV(backer, rows, sessionById = {}, dealName = {}) {
+  return toCSV(rows, [
+    { label: 'Date', get: r => iso(r.at) },
+    { label: 'Backer', get: () => backer.name },
+    { label: 'Item', get: r => r.label },
+    { label: 'Package', get: r => (r.dealId ? dealName[r.dealId] || '' : '') },
+    { label: 'Venue', get: r => (r.sessionId ? sessionById[r.sessionId]?.venue || '' : '') },
+    { label: 'Share %', get: r => r.share ?? '' },
+    { label: 'Markup', get: r => r.markup ?? '' },
+    { label: 'Backer paid in', get: r => r.paidIn ?? '' },
+    { label: 'Backer gets back', get: r => r.returns ?? '' },
+    { label: 'Change', get: r => r.amount },
+    { label: 'Balance (you owe them)', get: r => r.due },
+    { label: 'Note', get: r => r.note || '' },
   ]);
 }
 

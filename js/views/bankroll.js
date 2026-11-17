@@ -2,16 +2,16 @@
 import * as db from '../db.js';
 import * as M from '../model.js';
 import { h, mount, money, signClass, dateLabel, sheet, field, num, toLocalInput, fromLocalInput, toast, confirmBox, select } from '../ui.js';
-import { getBankrolls, sessionsWithBankroll } from '../store.js';
+import { getBankrolls, moneyInputs } from '../store.js';
 
 export async function render(root, _params, query) {
   const banks = await getBankrolls();
-  const [txs, sessions, defId] = await Promise.all([db.all('transactions'), sessionsWithBankroll(), db.getSetting('defaultBankroll', banks[0].id)]);
+  const [{ txs, sessions, opts, held }, defId] = await Promise.all([moneyInputs(), db.getSetting('defaultBankroll', banks[0].id)]);
   const active = banks.filter(b => !b.archived);
   const cur = banks.find(b => b.id === query.id) || banks.find(b => b.id === defId) || active[0] || banks[0];
-  const balance = id => M.bankrollBalance(id, txs, sessions);
+  const balance = id => M.bankrollBalance(id, txs, sessions, opts);
   const total = active.reduce((a, b) => a + balance(b.id), 0);
-  const rows = M.ledger(cur.id, txs, sessions).reverse();
+  const rows = M.ledger(cur.id, txs, sessions, opts).reverse();
 
   const addTx = async kind => {
     const r = await sheet(close => {
@@ -56,16 +56,19 @@ export async function render(root, _params, query) {
     h('div.card',
       h('div.row.between', h('h2', cur.name, cur.id === defId ? h('span.tag', { style: { marginLeft: '8px' } }, 'default') : null), h('button.btn.ghost.sm#edit-bankroll', { onclick: () => editBank(cur) }, 'Edit')),
       h('div.tiles', h('div.tile.big', h('div.k', 'Balance'), h('div.v#balance', { class: signClass(balance(cur.id)) }, money(balance(cur.id))))),
+      held > 0 && h('a.row.between.small#held', { href: '#/staking', style: { margin: '-4px 2px 12px', color: 'var(--muted)', textDecoration: 'none' } },
+        h('span', 'You also hold backers’ money'), h('b', money(held))),
       h('div.btn-grid', h('button.btn.primary#btn-deposit', { onclick: () => addTx('deposit') }, '+ Deposit'), h('button.btn#btn-withdraw', { onclick: () => addTx('withdrawal') }, '− Withdraw'))),
     h('div.card', h('h3', 'History'),
       rows.length ? h('ul.list#ledger', rows.map(r => h('li', h('div.item',
         h('div.grow',
-          h('div.t', r.kind === 'session' ? M.sessionTitle(r.ref) : r.kind === 'deposit' ? 'Deposit' : 'Withdrawal'),
-          h('div.s', [dateLabel(r.at), r.kind === 'session' ? r.ref.venue : r.ref.note].filter(Boolean).join(' · '))),
+          h('div.t', r.kind === 'session' ? M.sessionTitle(r.ref) : r.kind === 'settle' ? 'Staking: your cut' : r.kind === 'deposit' ? 'Deposit' : 'Withdrawal'),
+          h('div.s', [dateLabel(r.at), r.kind === 'session' ? r.ref.venue : r.kind === 'settle' ? 'package settled' : r.ref.note, r.kind === 'session' && (r.ref.backing || []).length ? 'your share' : null].filter(Boolean).join(' · '))),
         h('div', { style: { textAlign: 'right' } },
           h('div.amt', { class: signClass(r.amount) }, money(r.amount, { sign: true })),
           h('div.s.muted', money(r.balance))),
-        r.kind !== 'session'
+        r.kind === 'settle' ? h('a.btn.ghost.sm', { href: `#/staking/${r.ref.backerId}`, 'aria-label': 'Open backer' }, '›')
+          : r.kind !== 'session'
           ? h('button.btn.ghost.sm', { 'aria-label': 'Delete', onclick: async () => {
             if (await confirmBox(`Delete this ${r.kind}?`, { ok: 'Delete', danger: true })) { await db.remove('transactions', r.ref.id); render(root, _params, { id: cur.id }); }
           } }, '✕')
