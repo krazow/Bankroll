@@ -1,5 +1,6 @@
 // Stats: filters, summary, profit graph, breakdowns, calendar, tournaments and mindset.
 import * as S from '../stats.js';
+import * as K from '../staking.js';
 import { lineChart, barChart } from '../chart.js';
 import { h, mount, money, signClass, dateLabel, select, toast } from '../ui.js';
 import { getBankrolls, sessionsWithBankroll } from '../store.js';
@@ -97,6 +98,14 @@ export async function render(root) {
             h('tbody', rows.map(r => h('tr', h('td', r.key), h('td', r.count), h('td', r.hours.toFixed(1)),
               h('td', { class: signClass(r.net) }, money(r.net, { sign: true })), h('td', { class: signClass(r.hourly) }, r.hourly === null ? '—' : money(Math.round(r.hourly))), h('td', r.winRate + '%'))))))),
 
+        (() => {
+          const backed = list.filter(x => (x.backing || []).length);
+          if (!backed.length) return null;
+          const take = Math.round(list.reduce((a, x) => a + K.playerNet(x), 0) * 100) / 100;
+          return h('div.card#staking-stats', h('h3', 'After backers'),
+            h('div.tiles', tile('Your share', money(take, { sign: true }), take, 'st-take'), tile('Backed sessions', String(backed.length), 0, 'st-backed')),
+            h('p.small.muted', 'Stats above count whole sessions. “Your share” takes out what backers own; package profit is added when you settle. ', h('a', { href: '#/staking' }, 'Staking')));
+        })(),
         calendarCard(list, draw),
         ins.count ? h('div.card#mindset', h('h3', 'Mindset vs results'), h('p.small.muted', `From ${ins.count} reviewed session${ins.count === 1 ? '' : 's'}: your hourly rate by how you felt.`),
           Object.values(ins.fields).map(fd => h('div', { style: { marginBottom: '10px' } }, h('b', fd.label),

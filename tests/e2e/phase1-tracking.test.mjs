@@ -230,7 +230,7 @@ test('bankroll: deposits, withdrawals, session results and multiple bankrolls', 
 test('More menu and currency setting', async () => {
   const { page, context } = await openApp(browser, srv.url, { hash: '/more' });
   await page.waitForSelector('#more-menu');
-  assert.equal(await page.locator('#more-menu li').count(), 3);
+  assert.equal(await page.locator('#more-menu li').count(), 4);
   await nav(page, '/settings');
   await page.selectOption('#currency', '€');
   await page.evaluate(async () => {

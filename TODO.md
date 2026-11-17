@@ -60,4 +60,4 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 
 - [ ] Google Drive backup (needs a Google Cloud OAuth client)
 - [ ] Full hand replayer
-- [ ] Staking / backer tracking
+- [x] Staking / backer tracking (backer deals, makeup, settlements and statements, selling action)

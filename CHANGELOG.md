@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Staking and backers:** sell a piece of your action (share % and markup) on any session, even while playing;
+  staking packages with makeup that attach themselves to new sessions, settle with your cut of the profit, and close
+  when done; record payments both ways; see who owes whom; per-backer statements with CSV export.
+- Your bankroll now counts only your own money, and shows separately what you hold for backers. Stats show your share
+  after backers, and the sessions CSV has a "Your share of result" column.
+
 ## 0.1.0 (2026-11-16)
 
 The first release of Bankroll: a personal poker session and bankroll tracker that installs from the browser,

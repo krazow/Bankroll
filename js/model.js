@@ -119,17 +119,20 @@ export function tourneyEntries(buyIn, fee, count = 1, at = Date.now()) {
 // transaction: { bankrollId, kind: 'deposit'|'withdrawal', amount, date, note }
 export function txSigned(t) { return t.kind === 'withdrawal' ? -Math.abs(t.amount) : Math.abs(t.amount); }
 
-export function bankrollBalance(bankrollId, txs, sessions) {
+// opts.result: a session's result for YOU (staking passes your share); opts.settles: package settlements (your cut).
+export function bankrollBalance(bankrollId, txs, sessions, { result = net, settles = [] } = {}) {
   const t = sum(txs.filter(x => x.bankrollId === bankrollId), txSigned);
-  const s = sum(sessions.filter(x => x.bankrollId === bankrollId && x.status === 'done'), net);
-  return round2(t + s);
+  const s = sum(sessions.filter(x => x.bankrollId === bankrollId && x.status === 'done'), result);
+  const c = sum(settles.filter(x => x.bankrollId === bankrollId), x => x.playerCut);
+  return round2(t + s + c);
 }
 
 // Every change to a bankroll in time order, with the running balance.
-export function ledger(bankrollId, txs, sessions) {
+export function ledger(bankrollId, txs, sessions, { result = net, settles = [] } = {}) {
   const rows = [
     ...txs.filter(x => x.bankrollId === bankrollId).map(t => ({ kind: t.kind, at: t.date, amount: txSigned(t), ref: t })),
-    ...sessions.filter(x => x.bankrollId === bankrollId && x.status === 'done').map(s => ({ kind: 'session', at: s.end ?? s.start, amount: net(s), ref: s })),
+    ...sessions.filter(x => x.bankrollId === bankrollId && x.status === 'done').map(s => ({ kind: 'session', at: s.end ?? s.start, amount: result(s), ref: s })),
+    ...settles.filter(x => x.bankrollId === bankrollId).map(x => ({ kind: 'settle', at: x.date, amount: x.playerCut, ref: x })),
   ].sort((a, b) => a.at - b.at);
   let bal = 0;
   for (const r of rows) { bal = round2(bal + r.amount); r.balance = bal; }

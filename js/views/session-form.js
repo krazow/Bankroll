@@ -93,6 +93,10 @@ export async function render(root, _params, query) {
     const err = form.querySelector('#form-error');
     try {
       const out = readForm(form, s, { live, editing, runningEdit, entries });
+      if (!editing && !(out.backing || []).length) {
+        const { autoBacking } = await import('../staking.js');
+        out.backing = autoBacking(out, await db.all('deals'));
+      }
       if (live) {
         const started = M.startLive(out);
         await db.put('sessions', started);

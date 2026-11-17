@@ -87,6 +87,8 @@ export async function render(root) {
     clock.textContent = duration(M.playedMs(s, now), { seconds: true });
     statusTag.textContent = M.onBreak(s) ? 'On break' : 'Playing';
     statusTag.className = 'tag' + (M.onBreak(s) ? '' : ' live');
+    const lb = root.querySelector('#live-backing');
+    if (lb) { const sold = (s.backing || []).reduce((t, l) => t + Number(l.share), 0); lb.textContent = sold ? `Backing (${sold}%)` : 'Sell action'; }
     const pb = root.querySelector('#btn-pause');
     if (pb) pb.textContent = M.onBreak(s) ? '▶ Resume' : '❚❚ Break';
     const bi = M.totalBuyIn(s), exp = M.expensesTotal(s);
@@ -117,6 +119,11 @@ export async function render(root) {
     h('div.card', buttons, h('div', { style: { height: '10px' } }), endBtn),
     h('div.card', h('h3', 'Timeline'), events),
     h('div.row', h('a.btn.ghost.sm', { href: `#/new?edit=${s.id}` }, 'Edit details'),
+      h('button.btn.ghost.sm#live-backing', { onclick: async () => {
+        const { editBacking } = await import('../backing.js');
+        const next = await editBacking(s);
+        if (next) { await save({ ...s, backing: next }); toast(next.length ? `${next.reduce((a, l) => a + l.share, 0)}% of your action sold` : 'Backing removed'); }
+      } }, (s.backing || []).length ? `Backing (${(s.backing || []).reduce((a, l) => a + Number(l.share), 0)}%)` : 'Sell action'),
       h('a.btn.ghost.sm#live-hand', { href: `#/tools/hands?new=1&session=${s.id}` }, '+ Hand note'),
       h('button.btn.ghost.sm.danger#btn-discard', { onclick: async () => {
         if (await confirmBox('Delete this running session? Nothing will be saved.', { ok: 'Delete', danger: true })) {

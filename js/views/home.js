@@ -2,14 +2,15 @@
 import * as db from '../db.js';
 import * as M from '../model.js';
 import { h, mount, money, signClass, duration, go } from '../ui.js';
-import { runningSession, lastFinished, startRepeat, getBankrolls, sessionsWithBankroll } from '../store.js';
+import { runningSession, lastFinished, startRepeat, getBankrolls, moneyInputs } from '../store.js';
 import { item } from './sessions.js';
 import { dashboardCards } from '../hooks.js';
 
 export async function render(root) {
-  const [running, last, banks, txs, sessions] = await Promise.all([runningSession(), lastFinished(), getBankrolls(), db.all('transactions'), sessionsWithBankroll()]);
+  const [running, last, banks, mi] = await Promise.all([runningSession(), lastFinished(), getBankrolls(), moneyInputs()]);
+  const { txs, sessions, opts } = mi;
   const active = banks.filter(b => !b.archived);
-  const total = active.reduce((a, b) => a + M.bankrollBalance(b.id, txs, sessions), 0);
+  const total = active.reduce((a, b) => a + M.bankrollBalance(b.id, txs, sessions, opts), 0);
   const recent = [...sessions].sort((a, b) => b.start - a.start).slice(0, 5);
 
   const liveCard = running && h('a.card#running-card', { href: '#/live', style: { display: 'block', textDecoration: 'none', color: 'inherit', borderColor: 'var(--accent)' } },
@@ -25,7 +26,7 @@ export async function render(root) {
       h('a.btn.block#log-past', { href: '#/new' }, 'Log a past session')),
     h('a.card#bankroll-card', { href: '#/bankroll', style: { display: 'block', textDecoration: 'none', color: 'inherit' } },
       h('div.row.between', h('span.muted', 'Bankroll'), h('b#home-balance', { class: signClass(total), style: { fontSize: '1.4rem' } }, money(total)))),
-    await dashboardCards(sessions),
+    await dashboardCards(sessions, mi),
     recent.length ? h('div.card', h('div.row.between', h('h3', 'Recent'), h('a.small', { href: '#/sessions' }, 'All sessions')), h('ul.list', recent.map(item))) : null);
 
   if (running) {
