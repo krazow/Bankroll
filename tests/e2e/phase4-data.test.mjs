@@ -191,10 +191,18 @@ test('share card makes a PNG image', async () => {
   await context.close();
 });
 
-test('running-session notification and badge', async () => {
+test('running-session notification and badge', async t => {
   const { page, context } = await openApp(browser, srv.url, { serviceWorkers: 'allow' });
   await context.grantPermissions(['notifications'], { origin: srv.url.replace(/\/$/, '') });
   await page.evaluate(() => navigator.serviceWorker.ready);
+  // Some headless browsers (like CI's) accept notifications but never list them. Check that first.
+  const canList = await page.evaluate(async () => {
+    const reg = await navigator.serviceWorker.ready;
+    try { await reg.showNotification('probe', { tag: 'probe' }); } catch { return false; }
+    for (let i = 0; i < 20; i++) { const n = await reg.getNotifications({ tag: 'probe' }); if (n.length) { n.forEach(x => x.close()); return true; } await new Promise(r => setTimeout(r, 100)); }
+    return false;
+  });
+  if (!canList) { t.skip('this browser cannot show notifications'); await context.close(); return; }
   await nav(page, '/settings');
   await page.check('#notify-toggle');
   await page.waitForSelector('.toast:has-text("Notifications on")');
