@@ -81,8 +81,7 @@ async function renderForm(root, query) {
   field('Lesson', h('textarea', { name: 'lesson', placeholder: 'What would you do differently?' }, x.lesson || '')),
   field('Tags', h('input', { name: 'tags', value: (x.tags || []).join(', '), placeholder: 'bluff, 3-bet pot, river' }), 'Separate with commas'),
   field('Session', select('sessionId', [['', 'Not linked'], ...sessions.map(s => [s.id, `${dateLabel(s.start)} · ${M.sessionTitle(s)}${s.venue ? ' · ' + s.venue : ''}`])], x.sessionId || '')),
-  h('p#hand-error.neg'),
-  h('button.btn.primary.block.xl', { type: 'submit' }, 'Save hand'),
+  h('div.actionbar', h('p#hand-error.neg'), h('button.btn.primary.block.xl', { type: 'submit' }, 'Save hand')),
   existing && h('button.btn.danger.block#delete-hand', { type: 'button', style: { marginTop: '10px' }, onclick: async () => {
     if (await confirmBox('Delete this hand?', { ok: 'Delete', danger: true })) { await db.remove('hands', x.id); go('#/tools/hands'); }
   } }, 'Delete hand'));

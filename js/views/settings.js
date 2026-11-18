@@ -1,6 +1,6 @@
 // Settings: general, appearance, goals & rules, data (CSV / backups), privacy (PIN), notifications.
 import * as db from '../db.js';
-import { h, mount, field, select, setCurrency, toast, download, confirmBox, sheet, dateLabel, timeLabel, go } from '../ui.js';
+import { h, mount, field, select, setCurrency, toast, download, confirmBox, sheet, dateLabel, timeLabel, go, back } from '../ui.js';
 import { settingsSections } from '../hooks.js';
 import { sessionsCSV, transactionsCSV } from '../csv.js';
 import { backupData, backupName, restore, gistBackup, gistRestore } from '../backup.js';
@@ -68,7 +68,7 @@ export async function render(root, params = []) {
     return f;
   }, { title });
 
-  mount(root, h('h1', 'Settings'),
+  mount(root, back('#/more', 'More'), h('h1', 'Settings'),
     h('div.card', h('h2', 'General'), field('Currency symbol', cur)),
     h('div.card#appearance', h('h2', 'Appearance'),
       h('p.small.muted', 'Dark mode and large buttons are easiest to use at the table.'),

@@ -87,7 +87,20 @@ main { max-width: 720px; margin: 0 auto; padding: 12px 14px; outline: none; }
 .btn.ghost { background: transparent; }
 .btn.block { width: 100%; }
 .btn.xl { min-height: 72px; font-size: 1.15rem; border-radius: 16px; }
-.btn.sm { min-height: 36px; padding: 0 12px; font-size: .9rem; }
+.btn.sm { min-height: 44px; padding: 0 14px; font-size: .92rem; }
+.back { display: inline-flex; align-items: center; min-height: 44px; padding-right: 12px; margin: -6px 0 2px; font-weight: 600; text-decoration: none; }
+/* Main form button stays in reach above the tab bar */
+.actionbar { position: sticky; bottom: calc(var(--nav-h) + var(--safe-b) + 8px); z-index: 5; padding: 10px 0 0; margin-top: 8px;
+  background: linear-gradient(to bottom, transparent, var(--card) 14px); }
+.actionbar .btn { box-shadow: 0 6px 18px rgb(0 0 0 / .35); }
+details.more-opts { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; margin: 0 0 12px; }
+details.more-opts > summary { cursor: pointer; color: var(--accent); font-weight: 650; min-height: 32px; display: flex; align-items: center; }
+details.more-opts[open] > summary { margin-bottom: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 12px; }
+.chips button { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); font: inherit; font-weight: 650; cursor: pointer; }
+.chips button.on { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.banner { display: block; border-radius: var(--radius); padding: 14px; margin-bottom: 12px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
+.banner h2 { font-size: 1.05rem; margin-bottom: 4px; }
 .btn:disabled { opacity: .5; }
 .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
@@ -109,6 +122,7 @@ label { display: block; }
 .seg input { display: none; }
 .seg span { display: block; white-space: nowrap; padding: 10px 6px; border-radius: 9px; cursor: pointer; color: var(--muted); font-weight: 600; }
 .seg input:checked + span { background: var(--accent); color: var(--accent-ink); }
+#end-form:not([data-outcome="cashed"]) .only-cashed { display: none; }
 form[data-type="cash"] .only-tourney, form[data-type="tourney"] .only-cash { display: none; }
 fieldset { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; margin: 0 0 12px; }
 legend { color: var(--muted); padding: 0 6px; font-size: .85rem; }
@@ -167,3 +181,5 @@ table.t th { color: var(--muted); font-weight: 600; font-size: .8rem; }
 #lock .dots i.on { background: var(--accent); border-color: var(--accent); }
 #lock .keys { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
 #lock .keys button { height: 72px; border-radius: 50%; font-size: 1.5rem; }
+#lock > .btn.block, #lock > input, #lock > p { width: 100%; max-width: 420px; }
+#lock > p { text-align: center; margin: 0; }

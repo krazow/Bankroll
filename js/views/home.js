@@ -5,6 +5,7 @@ import { h, mount, money, signClass, duration, go } from '../ui.js';
 import { runningSession, lastFinished, startRepeat, getBankrolls, moneyInputs } from '../store.js';
 import { item } from './sessions.js';
 import { dashboardCards } from '../hooks.js';
+import { welcomeCard, installCard, backupBanner } from '../onboarding.js';
 
 export async function render(root) {
   const [running, last, banks, mi] = await Promise.all([runningSession(), lastFinished(), getBankrolls(), moneyInputs()]);
@@ -18,7 +19,10 @@ export async function render(root) {
     h('div.clock#home-clock', { style: { fontSize: '2.4rem' } }, duration(M.playedMs(running), { seconds: true })),
     h('p.center.muted', 'Tap to open'));
 
+  const finished = sessions.filter(s => s.status === 'done').length;
+  const [welcome, install, backupNag] = await Promise.all([welcomeCard(() => render(root)), installCard(finished), backupBanner(sessions)]);
   mount(root,
+    welcome, backupNag,
     liveCard || h('div.card', { style: { display: 'grid', gap: '10px' } },
       h('a.btn.primary.xl.block#start-live', { href: '#/new?live=1' }, 'Start a session'),
       last && h('button.btn.xl.block#repeat-last', { onclick: async () => { await startRepeat(); go('#/live'); } },
@@ -27,7 +31,8 @@ export async function render(root) {
     h('a.card#bankroll-card', { href: '#/bankroll', style: { display: 'block', textDecoration: 'none', color: 'inherit' } },
       h('div.row.between', h('span.muted', 'Bankroll'), h('b#home-balance', { class: signClass(total), style: { fontSize: '1.4rem' } }, money(total)))),
     await dashboardCards(sessions, mi),
-    recent.length ? h('div.card', h('div.row.between', h('h3', 'Recent'), h('a.small', { href: '#/sessions' }, 'All sessions')), h('ul.list', recent.map(item))) : null);
+    recent.length ? h('div.card', h('div.row.between', h('h3', 'Recent'), h('a.small', { href: '#/sessions' }, 'All sessions')), h('ul.list', recent.map(item))) : null,
+    install);
 
   if (running) {
     const timer = setInterval(() => { const c = root.querySelector('#home-clock'); if (c) c.textContent = duration(M.playedMs(running), { seconds: true }); }, 1000);

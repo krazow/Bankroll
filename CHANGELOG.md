@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- A short welcome on first launch sets your currency, starting bankroll and usual game, stakes, venue and buy-in, so new sessions start filled in.
+- Live tournaments: + Add-on and + Bounty buttons, and the end screen asks Busted or Cashed.
+- Ended a session by mistake? An "Undo end" button on the result page puts you back on the clock (for 15 minutes).
+- "Forgot PIN?" on the lock screen: restore from a backup file (turns the PIN off) or erase everything and start over.
+- A backup reminder on Home after 10 new sessions or 14 days, with a one-tap backup.
+- An "Install Bankroll" card after your first session, with step-by-step help on iPhone.
+- Search and type filters on the sessions list.
+
+### Changed
+
+- Logging a past session asks for the day, start time and length (one-tap 2h–8h buttons) instead of two date-time boxes.
+- The Save / Start button stays on screen; big blind, expenses and notes moved under "More options".
+- Every sub-screen has a "‹ Back" link, and session-page buttons are bigger (44px).
+
 ## 0.1.1 (2026-11-17)
 
 ### Added

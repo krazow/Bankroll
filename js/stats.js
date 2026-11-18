@@ -95,7 +95,7 @@ export function tourneySummary(sessions) {
   const withField = placed.filter(s => s.tourney?.entrants > 0);
   return {
     count: t.length,
-    entries: t.reduce((a, s) => a + s.buyIns.length, 0),
+    entries: t.reduce((a, s) => a + M.entryCount(s), 0),
     cost: round(cost), won: round(won), profit: round(won - cost),
     roi: cost > 0 ? round(((won - cost) / cost) * 100, 1) : null,
     itm: round((cashed / t.length) * 100, 1),

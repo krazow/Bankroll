@@ -136,4 +136,11 @@ export function download(name, text, type = 'text/plain') {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
 
+// "‹ Back": goes back inside the app when it can, else to `fallback`. Home-screen apps have no browser back button.
+let navDepth = 0;
+export function noteNavigation() { navDepth++; }
+export function back(fallback = '#/', label = 'Back') {
+  return h('a.back', { href: fallback, onclick: e => { if (navDepth > 1) { e.preventDefault(); navDepth -= 2; history.back(); } } }, '‹ ' + label);
+}
+
 export function go(hash) { if (location.hash !== hash) location.hash = hash; else window.dispatchEvent(new HashChangeEvent('hashchange')); }

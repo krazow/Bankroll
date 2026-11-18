@@ -1,7 +1,7 @@
 // Session list (#/sessions) and one session's details (#/session/<id>).
 import * as db from '../db.js';
 import * as M from '../model.js';
-import { h, mount, money, duration, signClass, dateLabel, timeLabel, confirmBox, go, toast } from '../ui.js';
+import { h, mount, money, duration, signClass, dateLabel, timeLabel, confirmBox, go, toast, back } from '../ui.js';
 import { getBankrolls } from '../store.js';
 import { sessionExtras } from '../hooks.js';
 
@@ -15,23 +15,38 @@ export async function render(root, params, query) {
         h('a.btn.block', { href: '#/new' }, 'Log a past session'))));
     return;
   }
-  // group by month
-  const groups = new Map();
-  for (const s of sessions) {
-    const k = new Date(s.start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
-    if (!groups.has(k)) groups.set(k, []);
-    groups.get(k).push(s);
-  }
-  mount(root,
-    h('div.row.between', { style: { marginBottom: '10px' } }, h('h1', 'Sessions'), h('a.btn.sm', { href: '#/new' }, '+ Log past session')),
-    [...groups.entries()].map(([month, list]) => {
+  const search = h('input#session-search', { type: 'search', placeholder: 'Search venue, game, stakes, notes…', 'aria-label': 'Search sessions', value: filter.q });
+  const kinds = h('div.chips#session-kind', { role: 'group', 'aria-label': 'Show' }, [['', 'All'], ['cash', 'Cash'], ['tourney', 'Tournaments'], ['online', 'Online']].map(([v, l]) =>
+    h('button', { type: 'button', class: filter.kind === v ? 'on' : '', onclick: e => { filter.kind = v; kinds.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === e.currentTarget)); paint(); } }, l)));
+  const listBox = h('div');
+  const paint = () => {
+    const q = search.value.trim().toLowerCase();
+    filter.q = search.value;
+    const shown = sessions.filter(s => (!filter.kind || (filter.kind === 'online' ? s.setting === 'online' : s.type === filter.kind)) &&
+      (!q || [s.venue, s.game, s.stakes, s.notes, M.sessionTitle(s)].join(' ').toLowerCase().includes(q)));
+    const groups = new Map();
+    for (const s of shown) {
+      const k = new Date(s.start).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(s);
+    }
+    mount(listBox, shown.length ? [...groups.entries()].map(([month, list]) => {
       const done = list.filter(s => s.status === 'done');
       const tot = done.reduce((a, s) => a + M.net(s), 0);
       return h('div.card',
         h('div.row.between', h('h3', month), h('b', { class: signClass(tot) }, money(tot, { sign: true }))),
-        h('ul.list#session-list', list.map(item)));
-    }));
+        h('ul.list.session-list', list.map(item)));
+    }) : h('div.card.center#no-match', h('p.muted', 'No sessions match.')));
+    const first = listBox.querySelector('.session-list'); if (first) first.id = 'session-list';
+  };
+  search.addEventListener('input', paint);
+  mount(root,
+    h('div.row.between', { style: { marginBottom: '10px' } }, h('h1', 'Sessions'), h('a.btn.sm', { href: '#/new' }, '+ Log past session')),
+    sessions.length > 5 && search, sessions.length > 5 && kinds,
+    listBox);
+  paint();
 }
+const filter = { q: '', kind: '' };
 
 export function item(s) {
   const running = M.isRunning(s);
@@ -55,6 +70,13 @@ async function renderOne(root, id, query) {
   const row = (k, v) => v === null || v === undefined || v === '' ? null : h('tr', h('td', k), h('td', v));
 
   mount(root,
+    back('#/sessions', 'Sessions'),
+    M.canUndoEnd(s) && h('div.banner#undo-end', h('div.row.between', h('span', 'Ended by mistake?'),
+      h('button.btn.sm.primary#btn-undo-end', { onclick: async () => {
+        const { runningSession } = await import('../store.js');
+        if (await runningSession()) { toast('Another session is running'); return; }
+        await db.put('sessions', M.undoEnd(s)); toast('Back on the clock'); go('#/live');
+      } }, 'Undo end — keep playing'))),
     h('div.card',
       h('div.row.between', h('h1', M.sessionTitle(s)), h('span.tag', s.setting === 'online' ? 'Online' : 'Live')),
       h('p.muted', [dateLabel(s.start, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }), s.venue].filter(Boolean).join(' · ')),
@@ -73,7 +95,8 @@ async function renderOne(root, id, query) {
           bb && hrs > 0 && row('BB / hour', (gross / bb / hrs).toFixed(1)),
         ] : [
           row('Buy-in + fee', `${money(t.buyIn || 0)} + ${money(t.fee || 0)}`),
-          row('Entries', String(s.buyIns.length)),
+          row('Entries', String(M.entryCount(s))),
+          (s.buyIns || []).some(b => b.kind === 'addon') ? row('Add-ons', money((s.buyIns || []).filter(b => b.kind === 'addon').reduce((a, b) => a + b.amount, 0))) : null,
           row('Players', t.entrants),
           row('Finished', t.place ? `${t.place}${t.entrants ? ' of ' + t.entrants : ''}` : null),
           row('Prize', money(t.prize || 0)),

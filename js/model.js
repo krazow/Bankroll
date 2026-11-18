@@ -46,6 +46,8 @@ export function playedMs(s, now = Date.now()) {
 export const hours = (s, now) => playedMs(s, now) / 3600e3;
 
 export const totalBuyIn = s => sum(s.buyIns, b => b.amount);
+// Tournament entries (re-entries count, add-ons don't).
+export const entryCount = s => (s.buyIns || []).filter(b => b.kind !== 'addon').length;
 export const expensesTotal = s => sum(s.expenses, e => e.amount);
 export function winnings(s) {
   if (s.type === 'tourney') return (Number(s.tourney?.prize) || 0) + (Number(s.tourney?.bounties) || 0);
@@ -73,9 +75,9 @@ export function startLive(p, now = Date.now()) {
   delete s.firstBuyIn;
   return s;
 }
-export function addBuyIn(s, amount, now = Date.now()) {
+export function addBuyIn(s, amount, now = Date.now(), kind = undefined) {
   const stackBefore = currentStack(s);
-  const out = { ...s, buyIns: [...(s.buyIns || []), { amount: Number(amount), at: now }] };
+  const out = { ...s, buyIns: [...(s.buyIns || []), kind ? { amount: Number(amount), at: now, kind } : { amount: Number(amount), at: now }] };
   // A rebuy adds chips to the stack too.
   if (s.stacks && s.stacks.length) out.stacks = [...s.stacks, { amount: stackBefore + Number(amount), at: now }];
   return out;
@@ -92,6 +94,23 @@ export function resume(s, now = Date.now()) {
   const breaks = (s.breaks || []).map((b, i, a) => (i === a.length - 1 && b.end == null ? { ...b, end: now } : b));
   return { ...s, status: 'running', breaks };
 }
+// Bounties won during a tournament.
+export function addBounty(s, amount) {
+  const t = { ...(s.tourney || {}) };
+  t.bounties = Math.round(((Number(t.bounties) || 0) + Number(amount)) * 100) / 100;
+  return { ...s, tourney: t };
+}
+
+// Undo "End session": back to running as if it was never ended (only shortly after ending live).
+export const UNDO_WINDOW = 15 * 60e3;
+export function canUndoEnd(s, now = Date.now()) { return s.status === 'done' && !!s.endedLive && now - s.endedLive < UNDO_WINDOW; }
+export function undoEnd(s) {
+  const out = { ...s, status: 'running', end: null, endedLive: null };
+  if (out.type === 'tourney') out.tourney = { ...(out.tourney || {}), place: null, prize: 0 };
+  else out.cashOut = null;
+  return out;
+}
+
 export function finish(s, result = {}, now = Date.now()) {
   let out = s.status === 'paused' ? resume(s, now) : { ...s };
   out = { ...out, status: 'done', end: now };

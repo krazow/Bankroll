@@ -92,14 +92,16 @@ test('only one session can run at a time', async () => {
 test('log a past cash session with expenses; validation catches mistakes', async () => {
   const { page, context } = await openApp(browser, srv.url, { hash: '/new' });
   await page.fill('input[name="stakes"]', '2/5');
-  await page.fill('input[name="start"]', '2026-11-10T19:00');
-  await page.fill('input[name="end"]', '2026-11-10T18:00');
+  await page.fill('input[name="date"]', '2026-11-10');
+  await page.fill('input[name="time"]', '19:00');
+  await page.fill('input[name="hours"]', '80');
   await page.fill('input[name="buyIn"]', '500');
   await page.fill('input[name="cashOut"]', '1200');
   await page.click('button:has-text("Save session")');
-  assert.match(await text(page, '#form-error'), /after the start/);
-  await page.fill('input[name="end"]', '2026-11-11T00:30');
+  assert.match(await text(page, '#form-error'), /over 72 hours/);
+  await page.fill('input[name="hours"]', '5.5');
   await page.fill('input[name="breakMin"]', '30');
+  await page.click('#more-opts summary');
   await page.click('button:has-text("+ Add expense")');
   await page.selectOption('[name="exp-kind"]', 'Food');
   await page.fill('[name="exp-amount"]', '25');
@@ -117,8 +119,9 @@ test('log a past cash session with expenses; validation catches mistakes', async
 test('log a tournament with re-entries, prize and bounties', async () => {
   const { page, context } = await openApp(browser, srv.url, { hash: '/new' });
   await page.click('.seg label:has-text("Tournament")');
-  await page.fill('input[name="start"]', '2026-11-09T12:00');
-  await page.fill('input[name="end"]', '2026-11-09T18:00');
+  await page.fill('input[name="date"]', '2026-11-09');
+  await page.fill('input[name="time"]', '12:00');
+  await page.click('#length-chips button[data-hours="6"]');
   await page.fill('input[name="tBuyIn"]', '100');
   await page.fill('input[name="tFee"]', '20');
   await page.fill('input[name="tEntries"]', '2');

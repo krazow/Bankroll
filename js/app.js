@@ -1,11 +1,12 @@
 // Bankroll app shell: hash router, bottom tabs, startup.
 import * as db from './db.js';
-import { h, mount, setCurrency, duration } from './ui.js';
+import { h, mount, setCurrency, duration, noteNavigation } from './ui.js';
 import * as M from './model.js';
 import { getBankrolls, runningSession } from './store.js';
 import { applyAppearance } from './appearance.js';
 import { initLock } from './lock.js';
 import * as notify from './notify.js';
+import { listenForInstall } from './onboarding.js';
 
 // route pattern -> [view module, tab]
 const ROUTES = [
@@ -34,6 +35,7 @@ function parseHash() {
 
 async function route() {
   const seq = ++renderSeq;
+  noteNavigation();
   const { path, query } = parseHash();
   const match = ROUTES.find(([rx]) => rx.test(path));
   if (typeof cleanup === 'function') { try { cleanup(); } catch { /* ignore */ } }
@@ -65,6 +67,7 @@ function paintPill() {
 }
 
 async function start() {
+  listenForInstall();
   await db.open();
   db.persist();
   await applyAppearance();
