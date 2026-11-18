@@ -1,11 +1,5 @@
 # Changelog
 
-## Unreleased
-
-### Fixed
-
-- Pop-up boxes (add-on, bounty, end session and others) now close with the Escape key on a keyboard.
-
 ## 0.1.1 (2026-11-18)
 
 ### Added
@@ -30,6 +24,10 @@
 - Every sub-screen has a "‹ Back" link, and session-page buttons are bigger (44px).
 - The tutorial video's titles and subtitles now stay clear of YouTube's channel name and buttons on phones
   (video scripts only).
+
+### Fixed
+
+- Pop-up boxes (add-on, bounty, end session and others) now close with the Escape key on a keyboard.
 
 ## 0.1.0 (2026-11-16)
 
