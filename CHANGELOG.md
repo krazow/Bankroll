@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Pop-up boxes (add-on, bounty, end session and others) now close with the Escape key on a keyboard.
+
 ## 0.1.1 (2026-11-18)
 
 ### Added
