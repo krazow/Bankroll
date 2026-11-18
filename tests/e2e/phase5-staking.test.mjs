@@ -74,7 +74,8 @@ test('staking package with makeup: auto-attach, makeup, settle, payments, statem
     await nav(page, '/new');
     await page.waitForSelector('#session-form');
     await page.fill('input[name="stakes"]', '1/2');
-    await page.fill('input[name="start"]', start); await page.fill('input[name="end"]', end);
+    await page.fill('input[name="date"]', start.slice(0, 10)); await page.fill('input[name="time"]', start.slice(11));
+    await page.fill('input[name="hours"]', String((Date.parse(end) - Date.parse(start)) / 3600e3));
     await page.fill('input[name="buyIn"]', String(bi)); await page.fill('input[name="cashOut"]', String(co));
     await page.click('button:has-text("Save session")');
     await page.waitForSelector('#session-backing');
@@ -114,7 +115,7 @@ test('staking package with makeup: auto-attach, makeup, settle, payments, statem
   // a tournament doesn't get the cash-only package
   await nav(page, '/new');
   await page.click('.seg label:has-text("Tournament")');
-  await page.fill('input[name="start"]', '2026-11-03T12:00'); await page.fill('input[name="end"]', '2026-11-03T16:00');
+  await page.fill('input[name="date"]', '2026-11-03'); await page.fill('input[name="time"]', '12:00'); await page.fill('input[name="hours"]', '4');
   await page.fill('input[name="tBuyIn"]', '50');
   await page.click('button:has-text("Save session")');
   await page.waitForSelector('#session-backing');

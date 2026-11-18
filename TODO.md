@@ -49,6 +49,21 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 - [x] Share card image
 - [x] PIN lock
 
+## Phase 6 · Easier flow (from the usability tests)
+
+- [x] Save / Start button pinned on screen on every form
+- [x] Shorter start form: big blind, expenses and notes under "More options"
+- [x] Welcome on first launch: currency, starting bankroll, usual game and stakes
+- [x] "‹ Back" on every sub-screen
+- [x] "Forgot PIN?" on the lock screen: restore a backup, or erase and start over
+- [x] Backup reminder after 10 sessions or 14 days, with one-tap backup
+- [x] Undo an ended session and keep playing
+- [x] Quick past-session logging: day, start time and length buttons
+- [x] Live tournaments: + Add-on, + Bounty, Busted / Cashed
+- [x] "Install app" card, with iPhone steps
+- [x] 44px buttons on session pages
+- [x] Search and filter the sessions list
+
 ## Extras
 
 - [x] Tutorial video (features and security), subtitles and YouTube thumbnail: [on YouTube](https://youtube.com/shorts/_pYxyl0TdmM)

@@ -1,5 +1,5 @@
 // Tools menu (#/tools) and each tool (#/tools/<name>).
-import { h, mount } from '../ui.js';
+import { h, mount, back as backLink } from '../ui.js';
 
 export const TOOLS = [
   ['hands', 'Hand notes', 'Write down key hands with cards, action and lessons'],
@@ -16,9 +16,9 @@ export async function render(root, params, query) {
     const mod = await import(`../tools/${name}.js`);
     return mod.render(root, query);
   }
-  mount(root, h('h1', 'Tools'),
+  mount(root, backLink('#/more', 'More'), h('h1', 'Tools'),
     h('div.card', h('ul.list#tools-menu', TOOLS.map(([k, t, s]) =>
       h('li', h('a.item', { href: `#/tools/${k}` }, h('div.grow', h('div.t', t), h('div.s', s)), h('span.muted', '›')))))));
 }
 
-export const back = () => h('a.small', { href: '#/tools', style: { display: 'inline-block', marginBottom: '8px' } }, '‹ Tools');
+export const back = () => backLink('#/tools', 'Tools');

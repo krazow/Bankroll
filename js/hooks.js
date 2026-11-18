@@ -61,7 +61,7 @@ export async function bankrollAlerts(sessions, rules, banks, txs, opts = {}) {
     }
     const tour = mine.filter(s => s.type === 'tourney').slice(-20);
     if (tour.length) {
-      const avg = tour.reduce((a, s) => a + M.totalBuyIn(s) / s.buyIns.length, 0) / tour.length;
+      const avg = tour.reduce((a, s) => a + M.totalBuyIn(s) / Math.max(1, M.entryCount(s)), 0) / tour.length;
       const t = S.tourneyBuyIns(bal, avg, rules);
       if (t && !t.ok) out.push(h('li.bankroll-alert', `${banks.length > 1 ? b.name + ': ' : ''}${t.buyIns} tournament buy-ins (avg ${money(Math.round(t.buyIn))}; rule ${rules.tourneyBuyIns})`));
     }

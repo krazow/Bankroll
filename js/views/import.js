@@ -2,7 +2,7 @@
 import * as db from '../db.js';
 import * as M from '../model.js';
 import { parseCSV, autoMap, rowsToSessions, dedupe, FIELDS } from '../csv.js';
-import { h, mount, select, field, toast, money, signClass, go, dateLabel } from '../ui.js';
+import { h, mount, select, field, toast, money, signClass, go, dateLabel, back } from '../ui.js';
 import { getBankrolls } from '../store.js';
 
 const LABELS = {
@@ -56,7 +56,7 @@ export async function render(root) {
         } }, `Import ${fresh.length} session${fresh.length === 1 ? '' : 's'}`)));
   };
 
-  mount(root, h('a.small', { href: '#/settings' }, '‹ Settings'), h('h1', 'Import sessions'),
+  mount(root, back('#/settings', 'Settings'), h('h1', 'Import sessions'),
     h('div.card', h('p', 'Choose a CSV file exported from another poker tracker (Poker Bankroll Tracker, Pokerbase, Poker Analytics…) or your own spreadsheet.'),
       h('p.small.muted', 'Needs at least a date and an amount (profit, or buy-in and cash-out). Sessions already in Bankroll are skipped.'),
       fileInput),

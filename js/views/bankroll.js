@@ -1,7 +1,7 @@
 // Bankrolls: balances, deposits/withdrawals, and the full ledger.
 import * as db from '../db.js';
 import * as M from '../model.js';
-import { h, mount, money, signClass, dateLabel, sheet, field, num, toLocalInput, fromLocalInput, toast, confirmBox, select } from '../ui.js';
+import { h, mount, money, signClass, dateLabel, sheet, field, num, toLocalInput, fromLocalInput, toast, confirmBox, select, back } from '../ui.js';
 import { getBankrolls, moneyInputs } from '../store.js';
 
 export async function render(root, _params, query) {
@@ -50,6 +50,7 @@ export async function render(root, _params, query) {
   };
 
   mount(root,
+    back('#/', 'Back'),
     h('div.row.between', { style: { marginBottom: '10px' } }, h('h1', 'Bankroll'), h('button.btn.sm#new-bankroll', { onclick: () => editBank(null) }, '+ New bankroll')),
     active.length > 1 && h('div.card', h('div.row.between', h('span.muted', 'All bankrolls'), h('b#total-balance', { class: signClass(total) }, money(total)))),
     active.length > 1 && h('div.seg', active.map(b => h('label', h('input', { type: 'radio', name: 'bank', checked: b.id === cur.id, onchange: () => render(root, _params, { id: b.id }) }), h('span', b.name)))),

@@ -32,7 +32,7 @@ export function sessionColumns(bankrollName = () => '') {
     { label: 'Cash out', get: s => (s.type === 'tourney' ? r2(M.winnings(s)) : s.cashOut ?? '') },
     { label: 'Tourney buy-in', get: s => s.tourney?.buyIn ?? '' },
     { label: 'Tourney fee', get: s => s.tourney?.fee ?? '' },
-    { label: 'Entries', get: s => (s.type === 'tourney' ? s.buyIns.length : '') },
+    { label: 'Entries', get: s => (s.type === 'tourney' ? M.entryCount(s) : '') },
     { label: 'Players', get: s => s.tourney?.entrants ?? '' },
     { label: 'Place', get: s => s.tourney?.place ?? '' },
     { label: 'Prize', get: s => s.tourney?.prize ?? '' },

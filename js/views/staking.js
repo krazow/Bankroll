@@ -5,7 +5,7 @@ import * as db from '../db.js';
 import * as M from '../model.js';
 import * as K from '../staking.js';
 import { statementCSV } from '../csv.js';
-import { h, mount, money, signClass, sheet, field, num, toast, confirmBox, dateLabel, select, download, toLocalInput, fromLocalInput, go } from '../ui.js';
+import { h, mount, money, signClass, sheet, field, num, toast, confirmBox, dateLabel, select, download, toLocalInput, fromLocalInput, go, back } from '../ui.js';
 import { getBackers, backerByName } from '../backing.js';
 import { getBankrolls } from '../store.js';
 
@@ -22,6 +22,7 @@ export async function render(root, params) {
   if (params[0]) return renderBacker(root, params[0]);
   const { backers, deals, sessions, money: mon } = await load();
   mount(root,
+    back('#/more', 'More'),
     h('div.row.between', { style: { marginBottom: '8px' } }, h('h1', 'Staking'),
       h('div.row', h('button.btn.sm#new-package', { onclick: async () => { if (await editDeal(null)) render(root, params); } }, '+ Package'))),
     h('p.muted.small', 'Track backers who buy a piece of your action, staking packages with makeup, and who owes whom. To sell action in one session, open it and tap “Sell action”.'),
@@ -121,7 +122,7 @@ async function renderBacker(root, id) {
   };
 
   mount(root,
-    h('a.small', { href: '#/staking' }, '‹ Staking'),
+    back('#/staking', 'Staking'),
     h('div.row.between', { style: { margin: '4px 0 8px' } }, h('h1#backer-name', b.name),
       h('button.btn.ghost.sm', { onclick: async () => {
         const name = await sheet(close => { const f = h('form', { onsubmit: e => { e.preventDefault(); close(f.n.value.trim() || null); } }, field('Name', h('input', { name: 'n', value: b.name })), h('div.row.end', h('button.btn.primary', { type: 'submit' }, 'Save'))); return f; }, { title: 'Rename backer' });
