@@ -64,6 +64,24 @@ Built in phases, with QA (unit + browser tests, release-kit checks) at the end o
 - [x] 44px buttons on session pages
 - [x] Search and filter the sessions list
 
+## Phase 7 · Start screen & clarity
+
+From the second walkthrough (Nov 18). All five start-screen options were picked; choose which parts to combine when building. Screenshots: `docs/start-screen/`.
+
+- [ ] Option 1 · Welcome hero: headline, description, three feature points; big bankroll number for regulars
+- [ ] Option 2 · Bankroll dashboard: balance with profit graph, month / per-hour / sessions strip, quick-action buttons
+- [ ] Option 3 · Getting-started checklist: "Get set up, 1 of 5"; monthly goal bar for regulars
+- [ ] Option 4 · Action tiles: six labelled tiles with a line each
+- [ ] Option 5 · This week + how it works: 1-2-3 steps and a tip; week chart and insight card for regulars
+- [ ] Bankroll row looks tappable ("Add money" at $0)
+- [ ] Hide Stats filters until there's a finished session
+- [ ] Plain-English bankroll check
+- [ ] Per-hour shown the same way everywhere ("$6/hr")
+- [ ] Explain or remove the repeated profit (All-time tile vs Bankroll total)
+- [ ] Backup reminder below Start a session
+- [ ] Label the green ＋ button
+- [ ] About page: what the app does, privacy, version
+
 ## Extras
 
 - [x] Tutorial video (features and security), subtitles and YouTube thumbnail: [on YouTube](https://youtube.com/shorts/_pYxyl0TdmM)
