@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 (2026-11-18)
 
 ### Added
 
@@ -11,17 +11,6 @@
 - A backup reminder on Home after 10 new sessions or 14 days, with a one-tap backup.
 - An "Install Bankroll" card after your first session, with step-by-step help on iPhone.
 - Search and type filters on the sessions list.
-
-### Changed
-
-- Logging a past session asks for the day, start time and length (one-tap 2h–8h buttons) instead of two date-time boxes.
-- The Save / Start button stays on screen; big blind, expenses and notes moved under "More options".
-- Every sub-screen has a "‹ Back" link, and session-page buttons are bigger (44px).
-
-## 0.1.1 (2026-11-17)
-
-### Added
-
 - **Staking and backers:** sell a piece of your action (share % and markup) on any session, even while playing;
   staking packages with makeup that attach themselves to new sessions, settle with your cut of the profit, and close
   when done; record payments both ways; see who owes whom; per-backer statements with CSV export.
@@ -30,8 +19,11 @@
 
 ### Changed
 
+- Logging a past session asks for the day, start time and length (one-tap 2h–8h buttons) instead of two date-time boxes.
+- The Save / Start button stays on screen; big blind, expenses and notes moved under "More options".
+- Every sub-screen has a "‹ Back" link, and session-page buttons are bigger (44px).
 - The tutorial video's titles and subtitles now stay clear of YouTube's channel name and buttons on phones
-  (video scripts only; the app itself is unchanged).
+  (video scripts only).
 
 ## 0.1.0 (2026-11-16)
 
