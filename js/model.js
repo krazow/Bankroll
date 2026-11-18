@@ -170,3 +170,15 @@ export function sessionTitle(s) {
   const bits = [s.type === 'tourney' ? 'Tourney' : s.stakes, s.game].filter(Boolean);
   return bits.join(' ') || (s.type === 'tourney' ? 'Tournament' : 'Cash game');
 }
+
+// Backup reminder: 10 new sessions, or at least one new session and 14 days, since the last backup.
+export function backupDue(sessions, lastBackup, now = Date.now(), snoozeUntil = 0) {
+  if (now < snoozeUntil) return null;
+  const done = sessions.filter(s => s.status === 'done');
+  if (!done.length) return null;
+  const since = done.filter(s => (s.createdAt || s.start) > (lastBackup || 0)).length;
+  const first = Math.min(...done.map(s => s.createdAt || s.start));
+  const days = Math.floor((now - Math.max(lastBackup || 0, first)) / 864e5);
+  if (since >= 10 || (since >= 1 && days >= 14)) return { since, days };
+  return null;
+}

@@ -74,7 +74,9 @@ export function toast(msg, { ms = 2200 } = {}) {
 export function sheet(build, { title } = {}) {
   return new Promise(resolve => {
     const back = h('div.sheet-back');
-    const close = v => { back.classList.remove('show'); setTimeout(() => back.remove(), 200); resolve(v ?? null); };
+    const onKey = e => { if (e.key === 'Escape' && [...document.querySelectorAll('.sheet-back')].pop() === back) { e.preventDefault(); e.stopImmediatePropagation(); close(null); } };
+    const close = v => { document.removeEventListener('keydown', onKey); back.classList.remove('show'); setTimeout(() => back.remove(), 200); resolve(v ?? null); };
+    document.addEventListener('keydown', onKey);
     const box = h('div.sheet', { role: 'dialog', 'aria-modal': 'true', 'aria-label': title || 'Dialog' },
       title && h('h2', title), build(close));
     back.appendChild(box);

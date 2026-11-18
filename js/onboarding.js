@@ -71,22 +71,13 @@ export async function installCard(finishedCount) {
   return card;
 }
 
-// ---- 3. Backup reminder: 10 new sessions or 14 days since the last backup.
-export function backupDue(sessions, lastBackup, now = Date.now(), snoozeUntil = 0) {
-  if (now < snoozeUntil) return null;
-  const done = sessions.filter(s => s.status === 'done');
-  if (!done.length) return null;
-  const since = done.filter(s => (s.createdAt || s.start) > (lastBackup || 0)).length;
-  const first = Math.min(...done.map(s => s.createdAt || s.start));
-  const days = Math.floor((now - Math.max(lastBackup || 0, first)) / 864e5);
-  if (since >= 10 || (since >= 1 && days >= 14)) return { since, days };
-  return null;
-}
+// ---- 3. Backup reminder (rule lives in model.js so it can be unit-tested).
+export const backupDue = M.backupDue;
 
 export async function backupBanner(sessions) {
   const [file, gist, snooze] = await Promise.all([db.getSetting('lastFileBackup', 0), db.getSetting('gist', {}), db.getSetting('backupSnooze', 0)]);
   const last = Math.max(file || 0, gist.lastAt || 0);
-  const due = backupDue(sessions, last, Date.now(), snooze);
+  const due = M.backupDue(sessions, last, Date.now(), snooze);
   if (!due) return null;
   const card = h('div.banner#backup-banner', { style: { borderColor: 'var(--warn)' } });
   mount(card,
