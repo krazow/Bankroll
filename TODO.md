@@ -85,6 +85,7 @@ From the second walkthrough (Nov 18). All five start-screen options were picked;
 ## Extras
 
 - [x] Tutorial video (features and security), subtitles and YouTube thumbnail: [on YouTube](https://youtube.com/shorts/_pYxyl0TdmM)
+- [x] Demo video (slide page before each feature, real use with tap highlights): [on YouTube](https://youtu.be/GSvarfdN8RM)
 
 - [x] Video: keep titles and subtitles clear of YouTube's channel info on phones (Shorts safe area)
 - [ ] Re-upload the fixed video to YouTube

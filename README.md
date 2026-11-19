@@ -19,6 +19,8 @@ add it to your home screen, and it works offline. All data stays on your device 
 
 Tutorial video: [watch on YouTube](https://youtube.com/shorts/_pYxyl0TdmM) (2:24, features and security).
 
+Demo video: [watch on YouTube](https://youtu.be/GSvarfdN8RM) (5:13, a player using each feature, with every tap highlighted).
+
 Plan and progress: [TODO.md](TODO.md). Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Develop
