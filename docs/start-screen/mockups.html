@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bankroll home mockups</title>
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .lede { font-size: 1.02rem; line-height: 1.45; }
+  .eyebrow { color: var(--accent); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .feat { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; padding: 8px 0; }
+  .feat .ic { width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); display: grid; place-items: center; font-size: 1.05rem; }
+  .feat b { display: block; font-size: .95rem; } .feat span { color: var(--muted); font-size: .85rem; }
+  .hero { background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 22%, var(--card)), var(--card) 70%); }
+  .big { font-size: 2.4rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .strip > div { background: color-mix(in srgb, var(--bg) 55%, transparent); border-radius: 10px; padding: 8px; }
+  .strip .k { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; }
+  .strip .v { font-weight: 750; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+  .qa { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 12px; }
+  .qa a { display: grid; justify-items: center; gap: 6px; text-decoration: none; color: var(--text); font-size: .75rem; text-align: center; }
+  .qa a i { font-style: normal; width: 54px; height: 54px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); display: grid; place-items: center; font-size: 1.35rem; }
+  .qa a.main i { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .act { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; min-height: 108px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 4px; }
+  .act i { font-style: normal; font-size: 1.4rem; } .act b { font-size: .98rem; } .act span { color: var(--muted); font-size: .8rem; line-height: 1.3; }
+  .act.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; } .act.primary span { color: color-mix(in srgb, var(--accent-ink) 75%, transparent); }
+  .check { list-style: none; padding: 0; margin: 8px 0 0; }
+  .check li { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); min-height: 48px; }
+  .check li:last-child { border: 0; }
+  .check .dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line); flex: none; display: grid; place-items: center; font-size: .8rem; }
+  .check .done .dot { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .check .done .lbl { color: var(--muted); text-decoration: line-through; }
+  .check .lbl { flex: 1; } .check .go { color: var(--accent); font-weight: 600; font-size: .9rem; }
+  .bar { height: 8px; border-radius: 99px; background: var(--bg2); overflow: hidden; margin: 6px 0 2px; } .bar i { display: block; height: 100%; background: var(--accent); }
+  .steps { counter-reset: s; display: grid; gap: 10px; }
+  .step { display: grid; grid-template-columns: 30px 1fr; gap: 10px; }
+  .step::before { counter-increment: s; content: counter(s); width: 30px; height: 30px; border-radius: 50%; background: var(--bg2); border: 1px solid var(--line); display: grid; place-items: center; font-weight: 700; color: var(--accent); }
+  .step b { display: block; } .step span { color: var(--muted); font-size: .85rem; }
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; align-items: end; height: 70px; margin: 10px 0 4px; }
+  .week i { display: block; border-radius: 6px 6px 2px 2px; background: var(--accent); }
+  .week i.n { background: var(--neg); } .week i.z { background: var(--line); height: 4px !important; }
+  .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; color: var(--muted); font-size: .7rem; }
+  .tip { border-left: 3px solid var(--info); }
+  .ghost-chart { position: relative; height: 92px; margin: 8px 0; }
+  .ghost-chart svg { width: 100%; height: 100%; }
+  .ghost-chart p { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; color: var(--muted); font-size: .85rem; text-align: center; padding: 0 20px; }
+  .label { position: fixed; top: 10px; right: 12px; z-index: 50; background: var(--warn); color: #241a00; font-weight: 800; font-size: .75rem; padding: 4px 10px; border-radius: 99px; }
+  .row.gap { gap: 8px; }
+</style></head>
+<body>
+<header class="top"><a class="brand"><img src="icons/icon.svg" width="28" height="28" alt=""> Bankroll</a><span id="right"></span></header>
+<main id="view"></main>
+<nav class="tabs">
+  <a class="on"><span>⌂</span>Home</a><a><span>☰</span>Sessions</a>
+  <a class="fab"><span>＋</span></a><a><span>▤</span>Stats</a><a><span>⋯</span>More</a>
+</nav>
+<div class="label" id="label"></div>
+<script>
+const q = new URLSearchParams(location.search), V = +q.get('v') || 1, NEW = q.get('s') !== 'data';
+const ABOUT = 'Bankroll is your private poker logbook. Time your sessions, log buy-ins and cash-outs, and see your real profit and hourly rate. Everything stays on this phone.';
+const recent = [['1/2 NLH','Tue, Nov 17 · Muckleshoot · 4h 00m','+$347','pos'],['1/2 NLH','Sat, Nov 14 · Snoqualmie · 5h 00m','-$89','neg'],['2/5 NLH','Thu, Nov 12 · Home game · 3h 00m','+$173','pos']];
+const recentHTML = n => `<div class="card"><div class="row between"><h3>Recent</h3><a class="small">All sessions</a></div><ul class="list">${recent.slice(0,n).map(r=>`<li><a class="item"><div class="grow"><div class="t">${r[0]}</div><div class="s">${r[1]}</div></div><div class="amt ${r[3]}">${r[2]}</div></a></li>`).join('')}</ul></div>`;
+const spark = (ghost) => `<svg viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M0 70 L25 62 L50 66 L75 50 L100 54 L125 40 L150 44 L175 30 L200 36 L225 22 L250 26 L275 14 L300 10" fill="none" stroke="${ghost?'var(--line)':'var(--accent)'}" stroke-width="3" ${ghost?'stroke-dasharray="6 6"':''}/>${ghost?'':'<path d="M0 70 L25 62 L50 66 L75 50 L100 54 L125 40 L150 44 L175 30 L200 36 L225 22 L250 26 L275 14 L300 10 L300 80 L0 80Z" fill="var(--accent)" opacity=".12"/>'}</svg>`;
+const startBtns = (repeat) => `<a class="btn primary xl block">▶ Start a session</a>${repeat?'<a class="btn xl block" style="margin-top:10px"><span>↻ Repeat last<br><small class="muted">1/2 NLH @ Muckleshoot</small></span></a>':''}<a class="btn block" style="margin-top:10px">Log a past session</a>`;
+
+const designs = {
+  1: { name: 'Welcome hero', html: () => NEW ? `
+    <div class="card hero">
+      <div class="eyebrow">Your poker logbook</div>
+      <h1 style="font-size:1.6rem;margin:.3rem 0 .4rem">Know if you're really winning.</h1>
+      <p class="lede muted">${ABOUT}</p>
+      ${startBtns(false)}
+    </div>
+    <div class="card">
+      <div class="feat"><div class="ic">⏱</div><div><b>Live timer</b><span>Start, pause for breaks, add rebuys — it keeps running if you close the app.</span></div></div>
+      <div class="feat"><div class="ic">📈</div><div><b>Real results</b><span>Profit, $/hour and win rate by game, stakes and venue.</span></div></div>
+      <div class="feat"><div class="ic">🔒</div><div><b>Private</b><span>No account, no cloud. PIN lock and backups you control.</span></div></div>
+    </div>` : `
+    <div class="card hero">
+      <div class="row between"><span class="muted">Bankroll</span><span class="small pos">▲ $681 all-time</span></div>
+      <div class="big">$3,681</div>
+      <p class="small muted" style="margin:.2rem 0 .9rem">+$6/hr over 108 hours · 24 sessions</p>
+      ${startBtns(true)}
+    </div>${recentHTML(3)}` },
+
+  2: { name: 'Bankroll dashboard', html: () => `
+    <div class="card">
+      <div class="row between"><span class="muted">Bankroll</span><a class="small">${NEW?'Add money':'Details ›'}</a></div>
+      <div class="big ${NEW?'':'pos'}">${NEW?'$0':'$3,681'}</div>
+      <div class="ghost-chart">${spark(NEW)}${NEW?'<p>Your profit graph grows here after your first session.</p>':''}</div>
+      <div class="strip"><div><div class="k">This month</div><div class="v ${NEW?'':'pos'}">${NEW?'—':'+$431'}</div></div><div><div class="k">Per hour</div><div class="v">${NEW?'—':'$6'}</div></div><div><div class="k">Sessions</div><div class="v">${NEW?'0':'24'}</div></div></div>
+    </div>
+    <div class="qa">
+      <a class="main"><i>▶</i>Start</a><a><i>${NEW?'✎':'↻'}</i>${NEW?'Log past':'Repeat'}</a><a><i>＄</i>Deposit</a><a><i>🃏</i>Hand note</a>
+    </div>
+    ${NEW ? `<div class="card"><h3>What is Bankroll?</h3><p class="muted" style="margin:0">${ABOUT}</p></div>` : recentHTML(3)}` },
+
+  3: { name: 'Getting-started checklist', html: () => NEW ? `
+    <div class="card"><p class="lede" style="margin:0">${ABOUT}</p></div>
+    <div class="card">
+      <div class="row between"><h3 style="margin:0">Get set up</h3><span class="small muted">1 of 5</span></div>
+      <div class="bar"><i style="width:20%"></i></div>
+      <ul class="check">
+        <li class="done"><span class="dot">✓</span><span class="lbl">Choose your currency</span></li>
+        <li><span class="dot"></span><span class="lbl">Add your starting bankroll</span><span class="go">Add ›</span></li>
+        <li><span class="dot"></span><span class="lbl">Play or log your first session</span><span class="go">Start ›</span></li>
+        <li><span class="dot"></span><span class="lbl">Set a monthly goal</span><span class="go">Set ›</span></li>
+        <li><span class="dot"></span><span class="lbl">Install the app &amp; make a backup</span><span class="go">How ›</span></li>
+      </ul>
+    </div>
+    <a class="btn primary xl block">▶ Start a session</a>` : `
+    ${startBtns(true)}<div style="height:12px"></div>
+    <div class="card"><div class="row between"><h3 style="margin:0">November goal</h3><span class="small muted">$431 of $1,000</span></div><div class="bar"><i style="width:43%"></i></div><p class="small muted" style="margin:.4rem 0 0">12 days left · about $47 a session to get there</p></div>
+    <div class="tiles"><div class="tile"><div class="k">Bankroll</div><div class="v pos">$3,681</div></div><div class="tile"><div class="k">Per hour</div><div class="v">$6</div></div></div>
+    ${recentHTML(2)}` },
+
+  4: { name: 'Action tiles', html: () => `
+    <p class="muted" style="margin:.2rem 2px 10px">${NEW ? 'Your private poker logbook — sessions, results and bankroll, all on this phone.' : 'Good evening. Bankroll <b class="pos">$3,681</b> · this month <b class="pos">+$431</b>'}</p>
+    <div class="grid3">
+      <a class="act primary"><i>▶</i><b>Start a session</b><span>Live timer, rebuys and breaks</span></a>
+      <a class="act"><i>${NEW?'✎':'↻'}</i><b>${NEW?'Log a past one':'Repeat last'}</b><span>${NEW?'Played already? Add it in seconds':'1/2 NLH @ Muckleshoot'}</span></a>
+      <a class="act"><i>＄</i><b>Bankroll</b><span>${NEW?'Add your starting money':'$3,681 · deposits & cash-outs'}</span></a>
+      <a class="act"><i>▤</i><b>Stats</b><span>${NEW?'Profit, $/hour, win rate':'+$6/hr · 45.8% winning'}</span></a>
+      <a class="act"><i>🃏</i><b>Hand notes</b><span>Write down big hands</span></a>
+      <a class="act"><i>🧮</i><b>Tools</b><span>Odds, blind timer, payouts</span></a>
+    </div>
+    ${NEW ? '' : recentHTML(2)}` },
+
+  5: { name: 'This week + how it works', html: () => NEW ? `
+    <h1 style="margin:.3rem 2px .2rem">Good evening</h1>
+    <p class="muted" style="margin:0 2px 12px">${ABOUT}</p>
+    <div class="card"><h3>How it works</h3><div class="steps">
+      <div class="step"><div><b>Start the timer when you sit down</b><span>Pause for breaks, tap + Rebuy as you go.</span></div></div>
+      <div class="step"><div><b>Enter your cash-out when you leave</b><span>Bankroll works out profit and $/hour.</span></div></div>
+      <div class="step"><div><b>Watch the trends</b><span>See where, what and when you win most.</span></div></div>
+    </div><div style="height:12px"></div>${startBtns(false)}</div>
+    <div class="card tip"><b class="small">Tip</b><p class="small muted" style="margin:.2rem 0 0">Forgot to start the timer? Use “Log a past session” — pick the day and tap a length.</p></div>` : `
+    <h1 style="margin:.3rem 2px .6rem">Good evening</h1>
+    <div class="card"><div class="row between"><h3 style="margin:0">This week</h3><b class="pos">+$431</b></div>
+      <div class="week"><i style="height:60%"></i><i class="z"></i><i class="n" style="height:25%"></i><i class="z"></i><i style="height:90%"></i><i style="height:35%"></i><i class="z"></i></div>
+      <div class="days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+      <p class="small muted" style="margin:.6rem 0 0">4 sessions · 17h played · bankroll $3,681</p></div>
+    ${startBtns(true)}<div style="height:12px"></div>
+    <div class="card tip"><b class="small">Insight</b><p class="small muted" style="margin:.2rem 0 0">You win $14/hr at Snoqualmie but lose $3/hr at the home game.</p></div>` },
+};
+document.getElementById('view').innerHTML = designs[V].html();
+document.getElementById('label').textContent = `Option ${V} · ${NEW ? 'new user' : 'regular player'}`;
+</script></body></html>
